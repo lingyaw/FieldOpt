@@ -8,7 +8,7 @@ if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR} AND IS_DIRECTORY ${EXPERIMENTAL_CONSTR
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/ )
 	set(EXPERIMENTAL_CONSTRAINTS_TESTS
 			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()
@@ -38,6 +38,8 @@ add_library(optimization
 		optimizers/GSS.cpp
 		optimizers/compass_search.cpp
 		optimizers/APPS.cpp
+		optimizers/hjds.cpp
+		optimizers/hjds.h
 		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
