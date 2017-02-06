@@ -41,6 +41,7 @@ namespace Optimization {
             void initializeModel(); //!< Initialize polynomial model
             void completeModel(); //!< Complete set of points for polynomial model and create model
             void optimizationStep(); //!< Use current model in optimization step
+            void perturb();
 
             // Optimizer interface
         public:
