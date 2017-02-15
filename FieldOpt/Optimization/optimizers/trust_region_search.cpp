@@ -31,6 +31,9 @@ namespace Optimization {
             case_handler_->AddNewCases(perturbations);
         }
 
+        //tentative_best_case_=base_case(Optimizer(settings,base_case,variable,grid)
+        // case_handler_ = new CaseHandler(tentative_best_case_);
+
         Optimizer::TerminationCondition TrustRegionSearch::IsFinished()
         {
             if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
@@ -88,24 +91,60 @@ namespace Optimization {
             polymodel_.set_evaluations_complete();
         }
 
-        void TrustRegionSearch::optimizationStep()
+        void TrustRegionSearch::optimizationStep() // we dont need Perturbation, gradient descent og dog-leg method
         {
             polymodel_.calculate_model_coeffs();
+            Eigen::VectorXd optimizationstep;
+
+            /* optimizationstep from polymodel for minimum value.
+             * Optimization step need to be for maximum value
+             * check model_( maximum or minimum)
+            */
+
+            if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
+              optimizationstep=-polymodel_.optimizationStep_NG();
+                std::cout << "The optimization step is    " << optimizationstep<< std::endl;
+            }
+            else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
+                optimizationstep=polymodel_.optimizationStep_NG();
+                std::cout << "The optimization step is    " << optimizationstep<< std::endl;
+            }
+            // Find point of newCenterPoint which is the best point in current subregion
+            // newCenterpoint=current centerpoint+optimization step
+            Eigen::VectorXd  NewCenterPoint=optimizationstep+polymodel_.get_centerpoint();
+            std::cout << "The current Center Point is   " << polymodel_.get_centerpoint()<< std::endl;
+            std::cout << "The New Center Point is   " << NewCenterPoint<< std::endl;
+
+            // Use the best case in current subregion as a new Base Case for next iteration. Creat this Case from its Point
+            // tentative_best_case=base_case (center point)
+            Case *newBaseCase=polymodel_.CaseFromPoint(NewCenterPoint,tentative_best_case_);
+
+            //polymodel_.optimizationStep();
+            //Case* a =polymodel_.find_NewBaseCase();
             // applyNew.. sets best case so far to new best.
             // let's just go with the flow for now
-            QList<Case *> perturbations = QList<Case *>();
-            for (QUuid id : tentative_best_case_->integer_variables().keys())
-                perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUS, radius_/3));
-            Case* c = perturbations.at(0);
+            //tentative_best_case=base_case;
+            //QList<Case *> perturbations = QList<Case *>();
+            //for (QUuid id : tentative_best_case_->integer_variables().keys())
+             //   perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUS, radius_/3));
+           // Case* c = perturbations.at(0);
 
-            case_handler_->AddNewCase(c);
+            //case_handler_->AddNewCase(c); //AddNewCase Add a new non-evaluated case to the evaluation_queue_.
 
-            applyNewTentativeBestCase();
+
+
+            //? tentative_best_case=c(new center point)
+           // applyNewTentativeBestCase(); // NewTentativeBestCase from RecentlyEvaluatedCases
             /* Add new center point, this also sets
              * polymodel_isModelReady to false.
              */
-            polymodel_.addCenterPoint(c);
+
+
+            polymodel_.addCenterPoint(NewCenterPoint);
             scaleRadius(0.5);
+            tentative_best_case_=newBaseCase;
+
+
         }
 
         QString TrustRegionSearch::GetStatusStringHeader() const
@@ -133,3 +172,4 @@ namespace Optimization {
         }
 
     }}
+

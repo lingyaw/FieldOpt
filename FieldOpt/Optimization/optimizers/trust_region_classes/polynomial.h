@@ -59,6 +59,7 @@ public:
     /*!
      * @brief Adds (the coefficients of) a polynomial to *this polynomial
      * @param Polynomial
+     * return to unitGraident
      */
     void add(Polynomial poly);
 

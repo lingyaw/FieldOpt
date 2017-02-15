@@ -8,7 +8,10 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
     cases_.append(initial_case);
     points_.append(initial_case->GetRealVarVector());
     center_ = points_.at(0);
+    std::cout << "center point when creating model " << center_ << std::endl;
     radius_ = radius;
+    std::cout << "radius when creating model " << radius_ << std::endl;
+
     dimension_ = center_.size();
     QList<Polynomial> basis;
     for (int i = 0; i < (dimension_+1)*(dimension_+2)/2; ++i) {
@@ -174,6 +177,7 @@ void PolyModel::complete_points() {
             cases_.swap(i, max_abs_ind);
         }
         else {
+            //std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
             //NO sufficient pivot element aka. good point
             //Find new point using alg proposed by Conn
             Polynomial temp_poly_here = temp_basis.at(i);
@@ -197,6 +201,7 @@ void PolyModel::complete_points() {
             //    std::cout << "found point = " << std::endl << points_abs.at(i) << std::endl;
             //    std::cout << "poly(point) = " << temp_poly_here.evaluate(points_abs.at(i)) << std::endl;
             //}
+            //std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
         }
 
         Polynomial temp_i = temp_basis.at(i);
@@ -218,6 +223,7 @@ void PolyModel::complete_points() {
             uj.add(ui);
             temp_basis[j] = uj;
         }
+
     }
 
     // Scale points back
@@ -227,7 +233,12 @@ void PolyModel::complete_points() {
     }
 
     needs_set_of_points_ = false;
-    points_ = points_abs;
+    points_ = points_scaled;//
+    std::cout << "length of points_ after completing points " << points_.length() << std::endl;
+    std::cout << "length of points_abs after completing points " << points_abs.length() << std::endl;
+    std::cout << "length of points_scaled after scaling points back " << points_scaled.length() << std::endl;
+    std::cout << "center point after completing points " << centre_point << std::endl;
+    std::cout << "radius after completing points  " << radius_ << std::endl;
 }
 
 void PolyModel::calculate_model_coeffs() {
@@ -251,21 +262,49 @@ void PolyModel::calculate_model_coeffs() {
     else{std::cout << "Model_coefficient alg: Either needs evaluations or set of points not finished yet" << std::endl;}
 }
 
-void PolyModel::addCenterPoint(Optimization::Case *c) {
-    cases_.append(c);
-    // Add to list of unevaluated cases if not yet evaluated
-    if (c->objective_function_value() == std::numeric_limits<double>::max())
-        cases_not_eval_.append(c);
-    points_.append(c->GetRealVarVector());
-    // Put points in correct position, i.e. first in array
+// Find optimization step along Gradient
+Eigen::VectorXd PolyModel::optimizationStep_NG() {
+   Eigen::VectorXd coeffs= get_model_coeffs();
+    Polynomial Poly = Polynomial(dimension_, coeffs);
+    Eigen::VectorXd negative_grad=-Poly.evaluateGradient(center_);// negative graident(gradient descent)
+    optimization_step_NG=radius_*negative_grad; // Optimizationstep at subregion boundary based on G
+    // TODO: use gradient eval function in Polynomial class to get grad, then opt step
+    return optimization_step_NG;
+}
+
+Eigen::VectorXd PolyModel::optimizationStep_SDL() {
+    // TODO: Find the Optimization step by single dog-leg method and return to optimizaiton_step_SDL
+
+
+    return optimization_step_SDL;
+
+}
+//Optimization::Case*  PolyModel::find_NewBaseCase(){
+//Eigen::VectorXcd NewCenterPoint=center_+optimization_step;
+   // Optimization::Case* NewBaseCase=CaseFromPoint(NewCenterPoint,cases_.at(0));
+   // return NewBaseCase;
+//}
+
+
+void PolyModel::addCenterPoint(Eigen::VectorXd NewCenterPoint) {
+    Optimization::Case *newBaseCase=CaseFromPoint(NewCenterPoint,cases_.at(0));//get new BaseCase from NewCenterPoint
+    cases_.append(newBaseCase);
+    cases_not_eval_.append(newBaseCase);
+    points_.append(NewCenterPoint);
     points_.swap(0,points_.size()-1);
     cases_.swap(0,points_.size()-1);
     center_ = points_.at(0);
-    // Set model not yet ready
     is_model_complete_ = false;
+    // cases_.append(c);
+    // Add to list of unevaluated cases if not yet evaluated
+    //if (c->objective_function_value() == std::numeric_limits<double>::max())
+        //cases_not_eval_.append(c);
+   // points_.append(c->GetRealVarVector());
+    // Put points in correct position, i.e. first in array
+    //points_.swap(0,points_.size()-1);
+   // cases_.swap(0,points_.size()-1);
+   // center_ = points_.at(0);
+    // Set model not yet ready
+   // is_model_complete_ = false;
 }
 
-void PolyModel::optimizationStep() {
-    Eigen::VectorXd grad = get_model_coeffs();
-    //TODO: use gradient eval function in Polynomial class to get grad, then opt step
-}

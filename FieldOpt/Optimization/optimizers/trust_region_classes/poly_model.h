@@ -37,6 +37,8 @@ private:
     int dimension_;
     QList<Polynomial> basis_; //!< Monomial basis of model, usually quadratic
     Eigen::VectorXd model_coeffs_; //!< The coefficients of the model using basis
+    Eigen::VectorXd optimization_step_NG;
+    Eigen::VectorXd optimization_step_SDL;
 
     /*!
      * @brief As described by A. Conn, finds a 'good point' for the
@@ -66,6 +68,7 @@ public:
      * \return A Case generated from a Eigen::VectorXd point
      */
     static Optimization::Case* CaseFromPoint(Eigen::VectorXd point, Optimization::Case *prototype);
+    //Optimization::Case*   find_NewBaseCase();
 
     QList<Eigen::VectorXd> get_points() {
         return points_;
@@ -96,6 +99,12 @@ public:
         calculate_model_coeffs();
         return model_coeffs_;
     };
+
+    //Eigen::VectorXd get_optimizationstep() {
+       // optimizationStep();
+      //  return optimization_step;
+   // };
+
 
     bool ModelNeedsEvals() {
         return needs_evals_;
@@ -131,9 +140,15 @@ public:
         needs_evals_ = false;
     }
 
-    void addCenterPoint(Optimization::Case *c);
+    void addCenterPoint(Eigen::VectorXd newCenterPoint);
 
-    void optimizationStep();
+
+    Eigen::VectorXd optimizationStep_NG();
+    Eigen::VectorXd optimizationStep_SDL();
+
+    Eigen::VectorXd get_centerpoint(){
+        return center_;
+    }
 
 };
 

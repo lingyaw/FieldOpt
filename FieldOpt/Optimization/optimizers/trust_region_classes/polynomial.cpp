@@ -63,8 +63,8 @@ Eigen::VectorXd Polynomial::evaluateGradient(Eigen::VectorXd point) {
         double grad_value_i = 0.5*(evaluate(point+unit)-evaluate(point-unit));
         grad(i) = grad_value_i;
     }
-
-    return grad;
+Eigen::VectorXd unit_grad=grad/grad.norm();
+    return unit_grad;
 
 }
 
