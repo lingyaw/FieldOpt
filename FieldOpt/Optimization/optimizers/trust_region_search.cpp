@@ -17,7 +17,7 @@ namespace Optimization {
             radius_ = k*radius_;
             polymodel_.setRadius(k);
         }
-        // perturb is not used 
+        // perturb is not used
         void TrustRegionSearch::perturb()
         {
             QList<Case *> perturbations = QList<Case *>();
