@@ -527,6 +527,6 @@ inline int random_integer(const int lower, const int upper) {
     boost::random::uniform_int_distribution<> dist(lower, upper);
     return dist(gen);
 }
->>>>>>> origin/develop
+
 
 #endif // MATH_FUNCTIONS_H
