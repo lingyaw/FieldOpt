@@ -8,7 +8,7 @@ if(EXISTS ${EXPERIMENTAL_CONSTRAINTS_DIR} AND IS_DIRECTORY ${EXPERIMENTAL_CONSTR
 	message("Including experimental constraints")
 	add_definitions(-DWITH_EXPERIMENTAL_CONSTRIANTS)
 	set(EXPERIMENTAL_CONSTRAINTS_SRC
-			${EXPERIMENTAL_CONSTRAINTS_DIR}/)
+			${EXPERIMENTAL_CONSTRAINTS_DIR}/ )
 	set(EXPERIMENTAL_CONSTRAINTS_TESTS
 			${EXPERIMENTAL_CONSTRAINTS_DIR}/tests/)
 else()
@@ -39,7 +39,11 @@ add_library(optimization
 		constraints/combined_spline_length_interwell_distance_reservoir_boundary.cpp
 		case_transfer_object.cpp
 		optimizers/ExhaustiveSearch2DVert.cpp
-		optimizers/ExhaustiveSearch2DVert.h
+		optimizers/GSS.cpp
+		optimizers/compass_search.cpp
+		optimizers/APPS.cpp
+		optimizers/hjds.cpp
+		optimizers/hjds.h
 		${EXPERIMENTAL_CONSTRAINTS_SRC} )
 add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
@@ -78,7 +82,8 @@ if (BUILD_TESTING)
 			tests/test_resource_optimizer.h
 			${EXPERIMENTAL_CONSTRAINTS_TESTS}
 			tests/constraints/test_rate_constraint.cpp
-			tests/test_case_transfer_object.cpp)
+			tests/test_case_transfer_object.cpp
+            tests/optimizers/test_apps.cpp)
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization

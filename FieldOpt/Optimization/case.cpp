@@ -121,14 +121,14 @@ namespace Optimization {
         str = str + QString("Case ID: %1\n").arg(id_.toString());
         str = str + "Binary variable values: ";
         for (bool val : binary_variables_.values())
-            str = str + QString::number(val);
+            str = str + QString::number(val) + ", ";
         str = str + "\nInteger variable values: ";
-        for (bool val : integer_variables_.values())
-            str = str + QString::number(val);
+        for (int val : integer_variables_.values())
+            str = str + QString::number(val) + ", ";
         str = str + "\nReal variable values: ";
-        for (bool val : real_variables().values())
-            str = str + QString::number(val);
-        str = "\n--------------------------------------------------\n";
+        for (double val : real_variables().values())
+            str = str + QString::number(val) + ", ";
+        str = str + "\n--------------------------------------------------\n";
         return str;
     }
 
@@ -158,5 +158,11 @@ namespace Optimization {
         for (int i = 0; i < vec.size(); ++i) {
             set_integer_variable_value(integer_id_index_map_[i], vec[i]);
         }
+    }
+
+    void Case::set_origin_data(Case *parent, int direction_index, double step_length) {
+        parent_ = parent;
+        direction_index_ = direction_index;
+        step_length_ = step_length;
     }
 }
