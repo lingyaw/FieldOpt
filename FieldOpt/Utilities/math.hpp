@@ -493,6 +493,7 @@ public:
 
 };
 
+/*!
  * @brief Linspace function. Create a list containing all elements in the range from start to (but not including) end
  * with step between each element.
  *
