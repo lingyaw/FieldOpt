@@ -1,14 +1,200 @@
 #include "hdf5_summary_reader.h"
 #include <iostream>
 #include <assert.h>
+#include <boost/current_function.hpp>
 
 using namespace H5;
-Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path)
-: GROUP_NAME_RESTART(("RESTART")), DATASET_NAME_TIMES("TIMES"),
-  GROUP_NAME_FLOW_TRANSPORT("FLOW_TRANSPORT"), DATASET_NAME_WELL_STATES("WELL_STATES")
+Hdf5SummaryReader::Hdf5SummaryReader(const std::string file_path,
+                                     bool get_cell_data,
+                                     bool debug)
+: GROUP_NAME_RESTART("RESTART"),
+  DATASET_NAME_TIMES("TIMES"),
+  GROUP_NAME_FLOW_TRANSPORT("FLOW_TRANSPORT"),
+  DATASET_NAME_ACTIVE_CELLS("ACTIVE_CELLS"),
+  DATASET_NAME_WELL_STATES("WELL_STATES"),
+  DATASET_NAME_PRESSURE("PTZ"),
+  DATASET_NAME_SATURATION("GRIDPROPTIME")
 {
     readTimeVector(file_path);
     readWellStates(file_path);
+    debug_ = debug;
+
+    /*!
+     * These are only called if we want to extract cell data from
+     * the h5 file for postprocessing/visualization purposes
+     */
+    if (get_cell_data){
+        readActiveCells(file_path);
+        readReservoirPressure(file_path);
+        readSaturation(file_path);
+    }
+}
+
+void Hdf5SummaryReader::readSaturation(std::string file_path) {
+
+    // Check file exists
+    H5File file(file_path, H5F_ACC_RDONLY);
+    Group group = Group(file.openGroup(GROUP_NAME_FLOW_TRANSPORT));
+    auto dataset_exists = H5Lexists(group.getId(), "GRIDPROPTIME", H5F_ACC_RDONLY);
+    std::vector<std::vector<double>> sgas, soil, swat;
+
+    if (dataset_exists) {
+
+        hsize_t SOIL, SWAT, SGAS;
+        if (number_of_phases() < 3){
+            SGAS = 0;
+            SOIL = 2; // col: 3
+            SWAT = 1; // col: 2
+        }else{
+            SGAS = 1; // col: 2
+            SOIL = 2; // col: 3
+            SWAT = 3; // col: 4
+        }
+
+        sgas_ = getSaturation(group, SGAS);
+        soil_ = getSaturation(group, SOIL);
+        swat_ = getSaturation(group, SWAT);
+
+    }else{
+
+        sgas_ = reservoir_pressure();
+        soil_ = reservoir_pressure();
+        swat_ = reservoir_pressure();
+    }
+}
+
+std::vector<std::vector<double>> Hdf5SummaryReader::getSaturation(
+        Group group, hsize_t sat_type) {
+
+    // Read the file
+    DataSet dataset = DataSet(group.openDataSet(DATASET_NAME_SATURATION));
+    DataSpace dataspace = dataset.getSpace();
+    hsize_t dims[3];
+    dataspace.getSimpleExtentDims(dims, NULL);
+
+    std::vector<double> vector;
+    vector.resize(dims[0] * dims[2]);
+    std::vector<std::vector<double>>  sat_; //!< Temporary saturation vector.
+
+    if (sat_type > 0){
+        // Define hyperslab
+        hsize_t count[3] = {dims[0], 1, dims[2]};
+        hsize_t offset[3] = {0, sat_type, 0};
+        dataspace.selectHyperslab(H5S_SELECT_SET, count, offset);
+
+        // Size of selected column + define memory space
+        hsize_t col_sz[2] = {dims[0], dims[2]};
+        DataSpace mspace(2, col_sz);
+
+        dataset.read(vector.data(), PredType::NATIVE_DOUBLE, mspace, dataspace);
+    }else{
+        vector.resize(dims[0] * dims[2],0);
+    }
+
+    int ncells = (int)dims[0];
+    int ntime_steps = (int)dims[2];
+
+    for (int tt = 0; tt < ntime_steps; ++tt) {
+        std::vector<double> sub;
+        for (int cc = 0; cc < ncells; ++cc) {
+            sub.push_back(vector[ cc * ntime_steps + tt ]);
+        }
+        sat_.push_back(sub);
+    }
+
+    return sat_;
+}
+
+void Hdf5SummaryReader::readReservoirPressure(std::string file_path) {
+
+    // Read the file
+    H5File file(file_path, H5F_ACC_RDONLY);
+    Group group = Group(file.openGroup(GROUP_NAME_FLOW_TRANSPORT));
+    DataSet dataset = DataSet(group.openDataSet(DATASET_NAME_PRESSURE));
+
+    DataSpace dataspace = dataset.getSpace();
+    hsize_t dims[3];
+
+    auto rank = dataspace.getSimpleExtentDims(dims, NULL);
+    if (debug_){
+        std::cout << "[\033[1;33m" << BOOST_CURRENT_FUNCTION << ":\033[0m\n"
+                  << "dataset rank " << rank << ", dims "
+                  << (unsigned long)(dims[0]) << " x "
+                  << (unsigned long)(dims[1]) << " x "
+                  << (unsigned long)(dims[2]) << std::endl;
+    }
+
+    // Define hyperslab
+    hsize_t count[3] = {dims[0], 1, dims[2]};
+    hsize_t offset[3] = {0, 0, 0};
+    dataspace.selectHyperslab(H5S_SELECT_SET, count, offset);
+
+    // Size of selected column + define memory space
+    hsize_t col_sz[2] = {dims[0], dims[2]};
+    DataSpace mspace(2, col_sz);
+
+    std::vector<double> vector;
+    vector.resize(dims[0] * dims[2]);
+    dataset.read(vector.data(), PredType::NATIVE_DOUBLE, mspace, dataspace);
+
+    // Reorder pressure vector
+    // Note:
+    // Data/time component ordering inside data vector:
+    // Example: pressure vector with 5 cells over 8 time steps:
+    // size of vector = ncells (x ndata_cols=1) x ntime_steps
+    //
+    //        cell 1   cell 2   cell 3   cell 4   cell 5
+    //time  |--------|--------|--------|--------|--------|
+    //steps: 12345678 12345678 12345678 12345678 12345678
+
+         int ncells = (int)dims[0];
+     int ndata_cols = (int)dims[1];
+    int ntime_steps = (int)dims[2];
+
+    for (int tt = 0; tt < ntime_steps; ++tt) {
+        std::vector<double> sub;
+        for (int cc = 0; cc < ncells; ++cc) {
+            sub.push_back(vector[ cc * ntime_steps + tt ]);
+        }
+        pressure_.push_back(sub);
+    }
+}
+
+void Hdf5SummaryReader::readActiveCells(std::string file_path) {
+
+    // Read the file
+    H5File file(file_path, H5F_ACC_RDONLY);
+    Group group = Group(file.openGroup(GROUP_NAME_FLOW_TRANSPORT));
+    DataSet dataset = DataSet(group.openDataSet(DATASET_NAME_ACTIVE_CELLS));
+
+    DataSpace dataspace = dataset.getSpace();
+    hsize_t dims[2];
+
+    // rank variable can be used for debug
+    auto rank = dataspace.getSimpleExtentDims(dims, NULL);
+    if (debug_){
+        std::cout << "[\033[1;33m" << BOOST_CURRENT_FUNCTION << ":\033[0m\n"
+                  << "dataset rank " << rank << ", dims "
+                  << (unsigned long)(dims[0]) << " x "
+                  << (unsigned long)(dims[1]) << std::endl;
+    }
+
+    // Define hyperslab
+    hsize_t  count[2] = { dims[0], 1 };
+    hsize_t offset[2] = { 0, 0 };
+    dataspace.selectHyperslab( H5S_SELECT_SET, count, offset );
+
+    // Size of selected colum + define memory space
+    hsize_t col_sz[1] = { dims[0] };
+    DataSpace mspace( 1, col_sz );
+
+    // Read and reorder vector
+    std::vector<int> vector;
+    vector.resize(dims[0]);
+    dataset.read(vector.data(), PredType::NATIVE_INT, mspace, dataspace);
+
+    cells_all_vector_ = vector;
+    cells_find_statuses(cells_all_vector_);
 }
 
 void Hdf5SummaryReader::readTimeVector(std::string file_path) {
@@ -26,6 +212,13 @@ void Hdf5SummaryReader::readTimeVector(std::string file_path) {
     hsize_t dims[2];
     dataspace.getSimpleExtentDims(dims, NULL);
 
+    // Check size of time vector is > 1, otherwise tricky errors
+    // occurs further downstream in readWellStates()
+    if ( (int)dims[0] < 2) {
+        throw std::runtime_error("TIME vector has only one component! "
+                                 "Check your simulation H5 output.");
+    }
+
     std::vector<double> vector;
     vector.resize(dims[0]);
     dataset.read(vector.data(), PredType::NATIVE_DOUBLE);
@@ -42,8 +235,8 @@ void Hdf5SummaryReader::readWellStates(std::string file_path) {
     hsize_t dims[2];
     dataspace.getSimpleExtentDims(dims, NULL);
 
-    nwells_ = dims[0];
-    ntimes_ = dims[1];
+    nwells_ = (int)dims[0];
+    ntimes_ = (int)dims[1];
 
     CompType ctype(sizeof(wstype_t));
     auto double_type = PredType::NATIVE_DOUBLE;
@@ -93,9 +286,9 @@ void Hdf5SummaryReader::parseWsVector(std::vector<wstype_t> &wsvec) {
 Hdf5SummaryReader::well_data Hdf5SummaryReader::parseWellState(std::vector<wstype_t> &ws, int wnr) {
     int first = wnr*ntimes_;
     int last = first + ntimes_;
-    int nperfs = ws[first].vAverageDensity.size();
+    int nperfs = (int)ws[first].vAverageDensity.size();
     auto state = Hdf5SummaryReader::well_data(ntimes_, nperfs);
-    state.nphases = ws[first].vPhaseRates.size() / nperfs;
+    state.nphases = (int)ws[first].vPhaseRates.size() / nperfs;
     int t = 0;
     for (int i = first; i < last; ++i) { // Well data at each time step
         state.well_types[t] = ws[i].vIntData[0];
@@ -223,6 +416,23 @@ std::vector<double> Hdf5SummaryReader::field_gas_rates_sc() const {
 
 int Hdf5SummaryReader::number_of_phases() const {
     return nphases_;
+}
+
+int Hdf5SummaryReader::cells_find_statuses(std::vector<int> &cells_all_vector_) {
+
+    for (int i = 0; i < cells_all_vector_.size(); ++i) {
+        if (cells_all_vector_[i] < 0){
+            cells_inactive_.push_back(cells_all_vector_[i]);
+            cells_inactive_idx_.push_back(i);
+        }else{
+            cells_active_.push_back(cells_all_vector_[i]);
+            cells_active_idx_.push_back(i);
+        }
+    }
+
+       cells_total_num_ = (int)cells_all_vector_.size();
+      cells_num_active_ = (int)cells_active_.size();
+    cells_num_inactive_ = (int)cells_inactive_.size();
 }
 
 std::vector<double> Hdf5SummaryReader::field_cumulative_oil_production_sc() const {
