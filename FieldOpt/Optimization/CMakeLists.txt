@@ -17,7 +17,7 @@ else()
 endif()
 
 add_library(optimization
-        optimization_exceptions.h
+		optimization_exceptions.h
 		objective/objective.cpp
 		objective/weightedsum.cpp
 		case.cpp
@@ -30,7 +30,7 @@ add_library(optimization
 
 		optimizers/compass_search.cpp
 		optimizers/trust_region_classes/polynomial.cpp
-        optimizers/trust_region_classes/poly_model.cpp
+		optimizers/trust_region_classes/poly_model.cpp
 		optimizers/trust_region_search.cpp
 
 		constraints/well_spline_length.cpp
@@ -52,21 +52,21 @@ add_library(fieldopt::optimization ALIAS ${PROJECT_NAME})
 
 include_directories(${EIGEN3_INCLUDE_DIR})
 target_link_libraries(optimization
-        PUBLIC fieldopt::model
-        PUBLIC fieldopt::simulation
-        PUBLIC fieldopt::constraintmath
+		PUBLIC fieldopt::model
+		PUBLIC fieldopt::simulation
+		PUBLIC fieldopt::constraintmath
 		PUBLIC fieldopt::reservoir
-        Qt5::Core
+		Qt5::Core
 		PUBLIC ${Boost_LIBRARIES})
 
 target_include_directories(optimization PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/constraints>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/objective>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/optimizers>)
 
 target_compile_features(optimization
-        PUBLIC cxx_auto_type
-        PUBLIC cxx_range_for)
+		PUBLIC cxx_auto_type
+		PUBLIC cxx_range_for)
 
 if (BUILD_TESTING)
 	# Unit tests
@@ -80,13 +80,13 @@ if (BUILD_TESTING)
 			tests/constraints/test_reservoir_boundary.cpp
 			tests/objective/test_weightedsum.cpp
 			tests/optimizers/test_compass_search.cpp
-            tests/optimizers/test_trust_region.cpp
+			tests/optimizers/test_trust_region.cpp
 			tests/test_resource_cases.h
 			tests/test_resource_optimizer.h
 			${EXPERIMENTAL_CONSTRAINTS_TESTS}
 			tests/constraints/test_rate_constraint.cpp
 			tests/test_case_transfer_object.cpp
-            tests/optimizers/test_apps.cpp)
+			tests/optimizers/test_apps.cpp)
 
 	target_link_libraries(test_optimization
 			fieldopt::optimization
@@ -101,3 +101,4 @@ if (BUILD_TESTING)
 
 	add_test(NAME test_optimization COMMAND $<TARGET_FILE:test_optimization>)
 endif()
+
