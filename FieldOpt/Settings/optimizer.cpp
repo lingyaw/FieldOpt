@@ -18,6 +18,8 @@ namespace Settings {
             type_ = OptimizerType::APPS;
         else if (QString::compare(type, "ExhaustiveSearch2DVert") == 0)
             type_ = OptimizerType::ExhaustiveSearch2DVert;
+        else if (QString::compare(type, "Trustregion") == 0)
+            type_ = OptimizerType::Trustregion;
         else throw OptimizerTypeNotRecognizedException("The optimizer type " + type.toStdString() + " was not recognized.");
 
         // Optimizer mode

@@ -21,7 +21,7 @@ namespace Settings {
     public:
         Optimizer(){}
         Optimizer(QJsonObject json_optimizer);
-        enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert };
+        enum OptimizerType { Compass, APPS, ExhaustiveSearch2DVert, Trustregion };
         enum OptimizerMode { Maximize, Minimize };
         enum ConstraintType { BHP, Rate, SplinePoints,
             WellSplineLength, WellSplineInterwellDistance, WellSplineDomain,
