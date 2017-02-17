@@ -75,6 +75,7 @@ namespace Optimization {
 
             }
             case_handler_->ClearRecentlyEvaluatedCases();
+            iteration_++;
         }
 
         void TrustRegionSearch::initializeModel() {
