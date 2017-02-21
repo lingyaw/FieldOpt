@@ -8,9 +8,9 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
     cases_.append(initial_case);
     points_.append(initial_case->GetRealVarVector());
     center_ = points_.at(0);
-    std::cout << "center point when creating model " << center_ << std::endl;
+    std::cout << "center point when creating model is " << center_ << std::endl;
     radius_ = radius;
-    std::cout << "radius when creating model " << radius_ << std::endl;
+    std::cout << "radius when creating model is " << radius_ << std::endl;
 
     dimension_ = center_.size();
     QList<Polynomial> basis;
@@ -242,6 +242,7 @@ void PolyModel::complete_points() {
 }
 
 void PolyModel::calculate_model_coeffs() {
+    std:: cout << "calculate model coefficent " << std::endl;
     if(!needs_evals_ && !needs_set_of_points_){
         Eigen::MatrixXd M = Eigen::MatrixXd::Zero(basis_.length() ,basis_.length());
         Eigen::VectorXd y = Eigen::VectorXd::Zero(basis_.length());
@@ -258,16 +259,22 @@ void PolyModel::calculate_model_coeffs() {
 
         Eigen::VectorXd alpha = M.inverse()*y;
         model_coeffs_ = alpha;
+        is_model_complete_= true;
+        std::cout << " Current Model coefficient is" <<model_coeffs_<<std::endl;
+
     }
     else{std::cout << "Model_coefficient alg: Either needs evaluations or set of points not finished yet" << std::endl;}
 }
 
 // Find optimization step along Gradient
 Eigen::VectorXd PolyModel::optimizationStep_NG() {
+    std::cout << " Calculate OptimizationStep" <<std::endl;
    Eigen::VectorXd coeffs= get_model_coeffs();
     Polynomial Poly = Polynomial(dimension_, coeffs);
-    Eigen::VectorXd negative_grad=-Poly.evaluateGradient(center_);// negative graident(gradient descent)
-    optimization_step_NG=radius_*negative_grad; // Optimizationstep at subregion boundary based on G
+    Eigen::VectorXd negative_grad=-Poly.evaluateGradient(center_);// negative gradient(gradient descent)
+    Eigen::VectorXd unit_grad=negative_grad/negative_grad.norm();
+    optimization_step_NG=radius_*unit_grad; // Optimizationstep at subregion boundary based on G
+    std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_NG <<std::endl;
     // TODO: use gradient eval function in Polynomial class to get grad, then opt step
     return optimization_step_NG;
 }
@@ -295,6 +302,8 @@ void PolyModel::addCenterPoint(Eigen::VectorXd NewCenterPoint) {
     cases_.swap(0,points_.size()-1);
     center_ = points_.at(0);
     is_model_complete_ = false;
+    needs_set_of_points_ = true;
+    needs_evals_= true;
     // cases_.append(c);
     // Add to list of unevaluated cases if not yet evaluated
     //if (c->objective_function_value() == std::numeric_limits<double>::max())
