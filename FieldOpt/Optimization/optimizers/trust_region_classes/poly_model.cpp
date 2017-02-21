@@ -11,6 +11,7 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
     std::cout << "center point when creating model is " << center_ << std::endl;
     radius_ = radius;
     std::cout << "radius when creating model is " << radius_ << std::endl;
+    std::cout << "objective value is  " << initial_case->objective_function_value()<< std::endl;
 
     dimension_ = center_.size();
     QList<Polynomial> basis;

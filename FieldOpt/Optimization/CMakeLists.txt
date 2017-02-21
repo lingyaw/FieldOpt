@@ -73,12 +73,12 @@ if (BUILD_TESTING)
 	find_package(GTest REQUIRED)
 	include_directories(${GTEST_INCLUDE_DIRS} tests)
 	add_executable(test_optimization
-			tests/test_case.cpp
-			tests/test_case_handler.cpp
-			tests/constraints/test_bhp_constraint.cpp
-			tests/constraints/test_constraint_handler.cpp
-			tests/constraints/test_reservoir_boundary.cpp
-			tests/objective/test_weightedsum.cpp
+	#		tests/test_case.cpp
+	#		tests/test_case_handler.cpp
+	#		tests/constraints/test_bhp_constraint.cpp
+	#		tests/constraints/test_constraint_handler.cpp
+	#		tests/constraints/test_reservoir_boundary.cpp
+	#		tests/objective/test_weightedsum.cpp
 			tests/optimizers/test_compass_search.cpp
 			tests/optimizers/test_trust_region.cpp
 			tests/test_resource_cases.h
