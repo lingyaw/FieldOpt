@@ -139,7 +139,9 @@ public:
     void set_evaluations_complete(){
         needs_evals_ = false;
     }
-
+    void set_model_complete(){
+        is_model_complete_ = true;
+    }
     void addCenterPoint(Eigen::VectorXd newCenterPoint);
 
 
