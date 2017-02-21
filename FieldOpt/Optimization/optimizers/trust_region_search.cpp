@@ -45,6 +45,8 @@ namespace Optimization {
                 std:: cout << "Initializing polymodel and completing points" << std::endl;
                 initializeModel();
                 std::cout <<"Is model completed  after initializeModel? "<<polymodel_.isModelReady() << std::endl;
+
+
             }
 
             /* Either the PolyModel is ready to give us a derivative, or
@@ -82,7 +84,7 @@ namespace Optimization {
             // Add cases to case_handler and clear CasesNotEval queue
             case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
             polymodel_.ClearCasesNotEval(); // needs_evals=false
-            polymodel_.set_model_complete(); //is_model_complete=true
+            //polymodel_.set_model_complete(); //is_model_complete=true
             polymodel_.set_evaluations_complete();
         }
 
