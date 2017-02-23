@@ -53,6 +53,7 @@ namespace Optimization {
     Case *Optimizer::GetCaseForEvaluation()
     {
         if (case_handler_->QueuedCases().size() == 0) {
+            std::cout << "run iterate() to create new interpolation points" << std::endl;
             iterate();
             iteration_++;
         }

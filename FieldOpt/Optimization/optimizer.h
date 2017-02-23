@@ -7,6 +7,8 @@
 #include "constraints/constraint_handler.h"
 #include "optimization_exceptions.h"
 #include "Model/properties/variable_property_container.h"
+#include <QList>
+#include <iostream>
 
 namespace Optimization {
 
