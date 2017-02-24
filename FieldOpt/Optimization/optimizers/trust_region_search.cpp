@@ -59,6 +59,15 @@ namespace Optimization {
 
             }
 
+                // if all cases have been evaluated(set objective value), calculate moodel coefficient, mode is ready
+
+                // if (-----){
+                //
+                // polymodel_.calculate_model_coeffs();
+                //
+                // }
+
+
             else {
 
                 std::cout << "Is model completed (else)? " << polymodel_.isModelReady() << std::endl;
@@ -84,13 +93,13 @@ namespace Optimization {
             // Add cases to case_handler and clear CasesNotEval queue
             case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
             polymodel_.ClearCasesNotEval(); // needs_evals=false
-           // polymodel_.set_model_complete(); //is_model_complete=true
+            polymodel_.set_model_complete(); //is_model_complete=true
             polymodel_.set_evaluations_complete();
         }
 
         void TrustRegionSearch::optimizationStep() // we dont need Perturbation, gradient descent og dog-leg method
         {
-            //polymodel_.calculate_model_coeffs();
+            polymodel_.calculate_model_coeffs();
             Eigen::VectorXd optimizationstep;
 
             /* optimizationstep from polymodel for minimum value.

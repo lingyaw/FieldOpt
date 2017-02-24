@@ -96,7 +96,7 @@ public:
     };
 
     Eigen::VectorXd get_model_coeffs() {
-        calculate_model_coeffs();
+       // calculate_model_coeffs();
         return model_coeffs_;
     };
 
