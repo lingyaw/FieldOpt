@@ -31,6 +31,7 @@ namespace Optimization {
         }
 
         void TrustRegionSearch::iterate() {
+            std::cout << "run iterate() and create interpolation points " << std::endl;
             std::cout << "this is iteration number " << iteration_ << std::endl;
             /* Everytime we update model we must first have a PolyModel object,
              * then we must complete the set of points in the model, then the
@@ -55,23 +56,22 @@ namespace Optimization {
             else if(!polymodel_.isModelReady()) {
                 std:: cout << "Model is not ready, Completing model first" << std::endl;
                 completeModel();
-                std::cout <<"Is model completed (is.ModelReday)? "<<polymodel_.isModelReady() << std::endl;
-
-
 
             }
 
             else {
-                std::cout <<"Is model completed (else)? "<<polymodel_.isModelReady() << std::endl;
+
+                std::cout << "Is model completed (else)? " << polymodel_.isModelReady() << std::endl;
                 std::cout << "Model should be ready, we make some opt step " << std::endl;
                 //TODO Here we can use current_model to do an optimization step, which
                 optimizationStep();
-                std:: cout << "end of opt step part" << std::endl;
-
+                std::cout << "end of opt step part" << std::endl;
             }
+
             case_handler_->ClearRecentlyEvaluatedCases();
             iteration_++;
         }
+
 
         void TrustRegionSearch::initializeModel() {
             // Create polymodel with radius and center and complete set of points.
@@ -84,12 +84,13 @@ namespace Optimization {
             // Add cases to case_handler and clear CasesNotEval queue
             case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
             polymodel_.ClearCasesNotEval(); // needs_evals=false
-            //polymodel_.set_model_complete(); //is_model_complete=true
+           // polymodel_.set_model_complete(); //is_model_complete=true
             polymodel_.set_evaluations_complete();
         }
 
         void TrustRegionSearch::optimizationStep() // we dont need Perturbation, gradient descent og dog-leg method
-        {   polymodel_.calculate_model_coeffs();
+        {
+            //polymodel_.calculate_model_coeffs();
             Eigen::VectorXd optimizationstep;
 
             /* optimizationstep from polymodel for minimum value.

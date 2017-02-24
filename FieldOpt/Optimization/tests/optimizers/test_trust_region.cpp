@@ -43,9 +43,12 @@ namespace {
 
     TEST_F(TrustRegionSearchTest, OneIterationTest) {
         Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
-        for (int iter = 0; iter < 420; ++iter) {
+        for (int iter = 0; iter <210; ++iter) {
+            int No_of_case=iter+1;
             Optimization::Case *new_case = trust_region_search_->GetCaseForEvaluation();
+            std::cout << "set objetive function value of case " << No_of_case<< std::endl;
             new_case->set_objective_function_value((iter%3)*700);
+            std::cout << "the objective function valus is " << new_case->objective_function_value()<< std::endl;
             trust_region_search_->SubmitEvaluatedCase(new_case);
         }
 
