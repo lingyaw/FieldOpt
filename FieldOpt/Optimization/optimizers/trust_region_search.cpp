@@ -128,6 +128,10 @@ namespace Optimization {
             std::cout <<"Is model completed after add CenterPoint? "<<polymodel_.isModelReady() << std::endl;
             scaleRadius(0.5);
             tentative_best_case_=newBaseCase;
+            //Eigen::VectorXd tentative_best_case=tentative_best_case_->GetRealVarVector();
+           // std::cout << "tentative best case is (New Center Point)  " << tentative_best_case<< std::endl;
+
+
 
             //polymodel_.optimizationStep();
             //Case* a =polymodel_.find_NewBaseCase();
