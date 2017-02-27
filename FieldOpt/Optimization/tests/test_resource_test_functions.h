@@ -68,6 +68,27 @@ namespace TestResources {
             return (100 * p1.cwiseProduct(p1) + p2.cwiseProduct(p2)).sum();
         }
 
+        /*!
+         * @brief Matyas  function.
+         *
+         * Formula: \f$ \sum_{i=1}^{n-1} \left[ 100 (x_{i+1} - x_i^2)^2 + (x_i -1)^2 \right] \f$
+         * Minimum: \f$ f(1, ..., 1) = 0 \f$
+         * Domain:  \f$ - \infty \leq x_i \leq \infty \f$
+         * Dimensions: \f$ 1 \leq i \leq n \f$
+         *
+         * @param xs Vector of _continous_ variable values.
+         * @return The function value at the given position.
+         */
+        inline double Matyas(VectorXd xs) {
+            VectorXd xhead = xs.head(xs.size() - 1);
+            VectorXd xtail = xs.tail(xs.size() - 1);
+
+            VectorXd p1 = xtail - xhead.cwiseProduct(xhead);
+            VectorXd p2 = xhead - VectorXd::Ones(xhead.size());
+            return (100 * p1.cwiseProduct(p1) + p2.cwiseProduct(p2)).sum();
+        }
+
+
     }
 }
 

@@ -87,7 +87,7 @@ namespace Optimization {
             // Add cases to case_handler and clear CasesNotEval queue
             case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
             polymodel_.ClearCasesNotEval(); // needs_evals=false
-            //polymodel_.set_model_complete(); //is_model_complete=true
+            polymodel_.set_model_complete(); //is_model_complete=true
             polymodel_.set_evaluations_complete();
         }
 

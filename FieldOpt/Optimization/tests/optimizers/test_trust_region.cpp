@@ -58,15 +58,18 @@ using namespace Optimization::Optimizers;
         //EXPECT_TRUE(poly_model.isModelReady());
     }
 
+        // sphere function, build model
+
+        // test sphere
     TEST_F(TrustRegionSearchTest, OneIterationTest) {
-            test_case_2r_->set_objective_function_value(1000);
-            Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_max_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
+            test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
+            Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
         Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
-        for (int iter = 0; iter <12; ++iter) {
+        for (int iter = 0; iter <6; ++iter) {
             int No_of_case=iter+1;
             Optimization::Case *new_case = trust_region_search_->GetCaseForEvaluation();
             std::cout << "set objetive function value of case " << No_of_case<< std::endl;
-            new_case->set_objective_function_value((iter%3)*700);
+            new_case->set_objective_function_value(Sphere(new_case->GetRealVarVector()));
             std::cout << "the objective function valus is " << new_case->objective_function_value()<< std::endl;
             trust_region_search_->SubmitEvaluatedCase(new_case);
         }
