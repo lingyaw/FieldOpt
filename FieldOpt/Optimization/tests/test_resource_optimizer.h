@@ -22,6 +22,9 @@ namespace TestResources {
             settings_compass_search_max_unconstr_ = new Settings::Optimizer(get_json_settings_compass_search_maximize_);
             settings_apps_min_unconstr_ = new Settings::Optimizer(get_json_settings_apps_minimize_);
             settings_apps_max_unconstr_ = new Settings::Optimizer(get_json_settings_apps_maximize_);
+            settings_apps_min_unconstr_ = new Settings::Optimizer(get_json_settings_trust_region_search_minimize_);
+            settings_apps_max_unconstr_ = new Settings::Optimizer(get_json_settings_trust_region_search_maximize_);
+
         }
 
         Optimization::Case *base_case_;
@@ -29,6 +32,8 @@ namespace TestResources {
         Settings::Optimizer *settings_compass_search_max_unconstr_;
         Settings::Optimizer *settings_apps_min_unconstr_;
         Settings::Optimizer *settings_apps_max_unconstr_;
+        Settings::Optimizer *settings_trust_region_search_min_unconstr_;
+        Settings::Optimizer *settings_trust_region_search_max_unconstr_;
 
     private:
         QJsonObject obj_fun_ {
@@ -85,6 +90,27 @@ namespace TestResources {
                 }},
                 {"Objective", obj_fun_}
         };
+        QJsonObject get_json_settings_trust_region_search_minimize_ {
+                {"Type", "Trustregion"},
+                {"Mode", "Minimize"},
+                {"Parameters", QJsonObject{
+                        {"MaxEvaluations", 100},
+                        {"InitialStepLength", 8},
+                        {"MinimumStepLength", 1}
+                }},
+                {"Objective", obj_fun_}
+        };
+        QJsonObject get_json_settings_trust_region_search_maximize_ {
+                {"Type", "Trustregion"},
+                {"Mode", "Maximize"},
+                {"Parameters", QJsonObject{
+                        {"MaxEvaluations", 100},
+                        {"InitialStepLength", 8},
+                        {"MinimumStepLength", 1}
+                }},
+                {"Objective", obj_fun_}
+        };
+
 
     };
 }
