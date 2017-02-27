@@ -91,6 +91,8 @@ public:
         return radius_;
     };
 
+    double obejctive_function_value_model();
+
     QList<Polynomial> get_basis() {
         return basis_;
     };

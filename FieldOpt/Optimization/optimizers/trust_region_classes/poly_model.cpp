@@ -318,3 +318,9 @@ void PolyModel::addCenterPoint(Eigen::VectorXd NewCenterPoint) {
    // is_model_complete_ = false;
 }
 
+double PolyModel::obejctive_function_value_model() {
+    Polynomial polynomial=Polynomial(dimension_,get_model_coeffs());
+    double objective_function_value_model=polynomial.evaluate(center_);
+    return objective_function_value_model;
+
+}

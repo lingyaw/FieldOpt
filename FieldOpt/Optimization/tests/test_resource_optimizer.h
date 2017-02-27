@@ -22,8 +22,8 @@ namespace TestResources {
             settings_compass_search_max_unconstr_ = new Settings::Optimizer(get_json_settings_compass_search_maximize_);
             settings_apps_min_unconstr_ = new Settings::Optimizer(get_json_settings_apps_minimize_);
             settings_apps_max_unconstr_ = new Settings::Optimizer(get_json_settings_apps_maximize_);
-            settings_apps_min_unconstr_ = new Settings::Optimizer(get_json_settings_trust_region_search_minimize_);
-            settings_apps_max_unconstr_ = new Settings::Optimizer(get_json_settings_trust_region_search_maximize_);
+            settings_trust_region_search_min_unconstr_ = new Settings::Optimizer(get_json_settings_trust_region_search_minimize_);
+            settings_trust_region_search_max_unconstr_ = new Settings::Optimizer(get_json_settings_trust_region_search_maximize_);
 
         }
 
