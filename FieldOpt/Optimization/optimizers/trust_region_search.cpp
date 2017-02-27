@@ -59,15 +59,6 @@ namespace Optimization {
 
             }
 
-                // if all cases have been evaluated(set objective value), calculate moodel coefficient, mode is ready
-
-                // if (-----){
-                //
-                // polymodel_.calculate_model_coeffs();
-                //
-                // }
-
-
             else {
 
                 std::cout << "Is model completed (else)? " << polymodel_.isModelReady() << std::endl;
@@ -93,7 +84,7 @@ namespace Optimization {
             // Add cases to case_handler and clear CasesNotEval queue
             case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
             polymodel_.ClearCasesNotEval(); // needs_evals=false
-            polymodel_.set_model_complete(); //is_model_complete=true
+            //polymodel_.set_model_complete(); //is_model_complete=true
             polymodel_.set_evaluations_complete();
         }
 
@@ -127,38 +118,20 @@ namespace Optimization {
             polymodel_.addCenterPoint(NewCenterPoint); //needs_set of points=true, is model_complete=false;
             std::cout <<"Is model completed after add CenterPoint? "<<polymodel_.isModelReady() << std::endl;
             scaleRadius(0.5);
+            //handleEvaluatedCase(newBaseCase);
             tentative_best_case_=newBaseCase;
-            //Eigen::VectorXd tentative_best_case=tentative_best_case_->GetRealVarVector();
-           // std::cout << "tentative best case is (New Center Point)  " << tentative_best_case<< std::endl;
 
-
-
-            //polymodel_.optimizationStep();
-            //Case* a =polymodel_.find_NewBaseCase();
-            // applyNew.. sets best case so far to new best.
-            // let's just go with the flow for now
-            //tentative_best_case=base_case;
-            //QList<Case *> perturbations = QList<Case *>();
-            //for (QUuid id : tentative_best_case_->integer_variables().keys())
-             //   perturbations.append(tentative_best_case_->Perturb(id, Case::SIGN::PLUS, radius_/3));
-           // Case* c = perturbations.at(0);
-
-            //case_handler_->AddNewCase(c); //AddNewCase Add a new non-evaluated case to the evaluation_queue_.
-
-
-
-            //? tentative_best_case=c(new center point)
-           // applyNewTentativeBestCase(); // NewTentativeBestCase from RecentlyEvaluatedCases
-            /* Add new center point, this also sets
-             * polymodel_isModelReady to false.
-             */
-
-
+            //calulate the objective function value of new center point (based on polymodel)
+            objective_value=polymodel_.obejctive_function_value_model();
+            std::cout <<"the objective function value(of new center point) based on polymodel is "<<objective_value<< std::endl;
 
 
 
         }
-
+        //void  TrustRegionSearch::handleEvaluatedCase(Case *c) {
+         //   if (isImprovement(c))
+          //      tentative_best_case_ = c;
+        //}
         QString TrustRegionSearch::GetStatusStringHeader() const
         {
             return QString("%1,%2,%3,%4,%5,%6,%7")

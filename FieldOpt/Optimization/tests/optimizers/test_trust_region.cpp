@@ -3,7 +3,9 @@
 #include "Optimization/tests/test_resource_optimizer.h"
 #include "Reservoir/tests/test_resource_grids.h"
 
-namespace {
+namespace Optimization {
+    namespace Optimizers {
+
 
     class TrustRegionSearchTest : public ::testing::Test, TestResources::TestResourceOptimizer, TestResources::TestResourceGrids {
     protected:
@@ -43,16 +45,25 @@ namespace {
 
     TEST_F(TrustRegionSearchTest, OneIterationTest) {
         Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
-        for (int iter = 0; iter <420; ++iter) {
+        for (int iter = 0; iter <209; ++iter) {
             int No_of_case=iter+1;
             Optimization::Case *new_case = trust_region_search_->GetCaseForEvaluation();
             std::cout << "set objetive function value of case " << No_of_case<< std::endl;
             new_case->set_objective_function_value((iter%3)*700);
             std::cout << "the objective function valus is " << new_case->objective_function_value()<< std::endl;
             trust_region_search_->SubmitEvaluatedCase(new_case);
-        }
+            //if (iter==208){
+            //    trust_region_search_->optimizationStep();
+           // };
 
-        Optimization::Case *tentative_best_1 = trust_region_search_->GetTentativeBestCase();
-        EXPECT_TRUE(tentative_best_1->objective_function_value() == tentative_best_0->objective_function_value());
+        }
+           // trust_region_search_->optimizationStep();
+
+            Optimization::Case *tentative_best_1 = trust_region_search_->GetTentativeBestCase();
+            // set objetive function value
+
+
+            EXPECT_TRUE(tentative_best_1->objective_function_value() == tentative_best_0->objective_function_value());
     }
+}
 }

@@ -30,17 +30,20 @@ namespace Optimization {
                           ::Model::Properties::VariablePropertyContainer *variables,
                           Reservoir::Grid::Grid *grid);
             double step_length() const { return radius_; }
+            double  objective_value_model() {return objective_value;}
+
 
         private:
             double radius_; //!< The size of the perturbation for each variable.
             double minimum_radius_; //!< Smallest allowed step length for the optimizer. _This is a termination condition_.
             PolyModel polymodel_;
+            double objective_value;
 
             void step(); //!< Move to a new tentative best case found in the list of recently evaluated cases.
             void scaleRadius(double k); //!< Scale the radius of the region by a factor k.
             void initializeModel(); //!< Initialize polynomial model
             void completeModel(); //!< Complete set of points for polynomial model and create model
-            void optimizationStep(); //!< Use current model in optimization step
+
             void perturb();
 
             // Optimizer interface
@@ -57,6 +60,7 @@ namespace Optimization {
             QString GetStatusStringHeader() const;
             QString GetStatusString() const;
             void UpdateModel(); //!< Creates a polynomial model, no matter what state the PolyModel is currently in
+            void optimizationStep(); //!< Use current model in optimization step
 
         private:
             void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
