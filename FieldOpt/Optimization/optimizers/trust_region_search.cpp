@@ -14,8 +14,11 @@ namespace Optimization {
 
         void TrustRegionSearch::scaleRadius(double k)
         {
+            std::cout << "Radius before scaling is  " << radius_ << std::endl;
+            std::cout << " factor k is  " << k<< std::endl;
             radius_ = k*radius_;
-            polymodel_.setRadius(k);
+            polymodel_.setRadius(radius_);
+            std::cout << "radius after scaling is " << radius_ << std::endl;
         }
 
         //tentative_best_case_=base_case(Optimizer(settings,base_case,variable,grid)
