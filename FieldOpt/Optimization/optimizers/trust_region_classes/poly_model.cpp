@@ -178,7 +178,7 @@ void PolyModel::complete_points() {
             cases_.swap(i, max_abs_ind);
         }
         else {
-            //std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
+            std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
             //NO sufficient pivot element aka. good point
             //Find new point using alg proposed by Conn
             Polynomial temp_poly_here = temp_basis.at(i);
@@ -199,7 +199,7 @@ void PolyModel::complete_points() {
 
             //if(i==-1){
             //    std::cout << "current polynomial = " << std::endl << temp_poly_here.return_coeffs() << std::endl;
-            //    std::cout << "found point = " << std::endl << points_abs.at(i) << std::endl;
+                std::cout << "found point = " << std::endl << points_abs.at(i) << std::endl;
             //    std::cout << "poly(point) = " << temp_poly_here.evaluate(points_abs.at(i)) << std::endl;
             //}
             //std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
@@ -240,6 +240,13 @@ void PolyModel::complete_points() {
     std::cout << "length of points_scaled after scaling points back " << points_scaled.length() << std::endl;
     std::cout << "center point after completing points " << centre_point << std::endl;
     std::cout << "radius after completing points  " << radius_ << std::endl;
+    for (int i = 0; i < n_Polynomials; ++i) {
+        std::cout << "i= " << i << std::endl;
+        std::cout << " Interpolation point is " <<points_.at(i) << std::endl;
+
+    }
+
+
 }
 
 void PolyModel::calculate_model_coeffs() {
