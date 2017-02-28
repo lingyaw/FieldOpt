@@ -87,47 +87,57 @@ namespace Optimization {
             // Add cases to case_handler and clear CasesNotEval queue
             case_handler_->AddNewCases(polymodel_.get_cases_not_eval());
             polymodel_.ClearCasesNotEval(); // needs_evals=false
-            polymodel_.set_model_complete(); //is_model_complete=true
+            //polymodel_.set_model_complete(); //is_model_complete=true
             polymodel_.set_evaluations_complete();
         }
 
         void TrustRegionSearch::optimizationStep() // we dont need Perturbation, gradient descent og dog-leg method
         {
-            polymodel_.calculate_model_coeffs();
-            Eigen::VectorXd optimizationstep;
+            // all cases must been evaluted first befor optimization step
+            if (case_handler_->QueuedCases().size()==0) {
+                std::cout << "All cases have been evaluated, we make optimization step now " << std::endl;
 
-            /* optimizationstep from polymodel for minimum value.
-             * Optimization step need to be for maximum value
-             * check model_( maximum or minimum)
-            */
+                polymodel_.calculate_model_coeffs();
+                Eigen::VectorXd optimizationstep;
 
-            if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-              optimizationstep=-polymodel_.optimizationStep_NG();
-                std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep<< std::endl;
+                /* optimizationstep from polymodel for minimum value.
+                 * Optimization step need to be for maximum value
+                 * check model_( maximum or minimum)
+                */
+
+                if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
+                    optimizationstep = -polymodel_.optimizationStep_NG();
+                    std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
+                              << std::endl;
+                } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
+                    optimizationstep = polymodel_.optimizationStep_NG();
+                    std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
+                              << std::endl;
+                }
+                // Find point of newCenterPoint which is the best point in current subregion
+                // newCenterpoint=current centerpoint+optimization step
+                Eigen::VectorXd NewCenterPoint = optimizationstep + polymodel_.get_centerpoint();
+                std::cout << "The current Center Point is   " << polymodel_.get_centerpoint() << std::endl;
+                std::cout << "The New Center Point is   " << NewCenterPoint << std::endl;
+
+                // Use the best case in current subregion as a new Base Case for next iteration. Creat this Case from its Point
+                // tentative_best_case=base_case (center point)
+                Case *newBaseCase = polymodel_.CaseFromPoint(NewCenterPoint, tentative_best_case_);
+                polymodel_.addCenterPoint(NewCenterPoint); //needs_set of points=true, is model_complete=false;
+                std::cout << "Is model completed after add CenterPoint? " << polymodel_.isModelReady() << std::endl;
+                //scaleRadius(0.5);
+                //handleEvaluatedCase(newBaseCase);
+                tentative_best_case_ = newBaseCase;
+
+                //calulate the objective function value of new center point (based on polymodel)
+                objective_value = polymodel_.obejctive_function_value_model();
+                std::cout << "the objective function value(of new center point) based on polymodel is "
+                          << objective_value << std::endl;
+
             }
-            else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                optimizationstep=polymodel_.optimizationStep_NG();
-                std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep<< std::endl;
+            else{
+                std::cout << "The evaluation queue still contains "<<case_handler_->QueuedCases().size()<<"cases"<<std::endl;
             }
-            // Find point of newCenterPoint which is the best point in current subregion
-            // newCenterpoint=current centerpoint+optimization step
-            Eigen::VectorXd  NewCenterPoint=optimizationstep+polymodel_.get_centerpoint();
-            std::cout << "The current Center Point is   " << polymodel_.get_centerpoint()<< std::endl;
-            std::cout << "The New Center Point is   " << NewCenterPoint<< std::endl;
-
-            // Use the best case in current subregion as a new Base Case for next iteration. Creat this Case from its Point
-            // tentative_best_case=base_case (center point)
-            Case *newBaseCase=polymodel_.CaseFromPoint(NewCenterPoint,tentative_best_case_);
-            polymodel_.addCenterPoint(NewCenterPoint); //needs_set of points=true, is model_complete=false;
-            std::cout <<"Is model completed after add CenterPoint? "<<polymodel_.isModelReady() << std::endl;
-            scaleRadius(0.5);
-            //handleEvaluatedCase(newBaseCase);
-            tentative_best_case_=newBaseCase;
-
-            //calulate the objective function value of new center point (based on polymodel)
-            objective_value=polymodel_.obejctive_function_value_model();
-            std::cout <<"the objective function value(of new center point) based on polymodel is "<<objective_value<< std::endl;
-
 
 
         }
