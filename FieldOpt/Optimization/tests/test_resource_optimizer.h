@@ -95,8 +95,8 @@ namespace TestResources {
                 {"Mode", "Minimize"},
                 {"Parameters", QJsonObject{
                         {"MaxEvaluations", 100},
-                        {"InitialStepLength", 8},
-                        {"MinimumStepLength", 1}
+                        {"InitialStepLength", 1},
+                        {"MinimumStepLength", 0.005}
                 }},
                 {"Objective", obj_fun_}
         };
@@ -105,8 +105,8 @@ namespace TestResources {
                 {"Mode", "Maximize"},
                 {"Parameters", QJsonObject{
                         {"MaxEvaluations", 100},
-                        {"InitialStepLength", 8},
-                        {"MinimumStepLength", 1}
+                        {"InitialStepLength", 1},
+                        {"MinimumStepLength", 0.005}
                 }},
                 {"Objective", obj_fun_}
         };
