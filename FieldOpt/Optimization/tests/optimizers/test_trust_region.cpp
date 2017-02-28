@@ -61,11 +61,11 @@ using namespace Optimization::Optimizers;
         // sphere function, build model
 
         // test sphere
-    TEST_F(TrustRegionSearchTest, OneIterationTest) {
+    TEST_F(TrustRegionSearchTest, SpherefunctionIterationTest) {
             test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
             Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
         Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
-        for (int iter = 0; iter < 41; ++iter) {
+        for (int iter = 0; iter < 35; ++iter) {
             int No_of_case=iter+1;
             Optimization::Case *new_case = trust_region_search_->GetCaseForEvaluation();
             std::cout << "set objetive function value of case " << No_of_case<< std::endl;
@@ -76,15 +76,17 @@ using namespace Optimization::Optimizers;
             trust_region_search_->SubmitEvaluatedCase(new_case);
             trust_region_search_->optimizationStep();
         }
-           //trust_region_search_->optimizationStep();
-
-            Optimization::Case *tentative_best_1 = trust_region_search_->GetTentativeBestCase();
-            // set objective function value of tentative_best_1
-             //double objective_value=trust_region_search_->objective_value_model();
-          ///  tentative_best_1->set_objective_function_value(objective_value);
 
 
-            EXPECT_TRUE(tentative_best_1->objective_function_value() == tentative_best_0->objective_function_value());
+            Optimization::Case *tentative_best_final = trust_region_search_->GetTentativeBestCase();
+            Eigen::VectorXd  point=tentative_best_final->GetRealVarVector();
+            std::cout<<"point of final tentative_best_ case is"<<point<<std::endl;
+
+            tentative_best_final->set_objective_function_value(Sphere(tentative_best_final->GetRealVarVector()));
+            std::cout<<"objetive function value of final tentative_best_ case is"<<tentative_best_final->objective_function_value()<<std::endl;
+
+
+            EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());
     }
 }
 

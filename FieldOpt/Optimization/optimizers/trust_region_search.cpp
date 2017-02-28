@@ -124,13 +124,13 @@ namespace Optimization {
                 // tentative_best_case=base_case (center point)
                 Case *newBaseCase = polymodel_.CaseFromPoint(NewCenterPoint, tentative_best_case_);
                 polymodel_.addCenterPoint(NewCenterPoint); //needs_set of points=true, is model_complete=false;
-                std::cout << "Is model completed after add CenterPoint? " << polymodel_.isModelReady() << std::endl;
                 //scaleRadius(0.5);
                 //handleEvaluatedCase(newBaseCase);
                 tentative_best_case_ = newBaseCase;
+                std::cout << "points of tentative_best_case is   " << tentative_best_case_->GetRealVarVector() << std::endl;
 
                 //calulate the objective function value of new center point (based on polymodel)
-                objective_value = polymodel_.obejctive_function_value_model();
+                objective_value = polymodel_.obejctive_function_value_model(tentative_best_case_->GetRealVarVector());
                 std::cout << "the objective function value(of new center point) based on polymodel is "
                           << objective_value << std::endl;
 

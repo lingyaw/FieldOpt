@@ -92,7 +92,7 @@ public:
         return radius_;
     };
 
-    double obejctive_function_value_model();
+    double obejctive_function_value_model(Eigen::VectorXd point);
 
     QList<Polynomial> get_basis() {
         return basis_;
