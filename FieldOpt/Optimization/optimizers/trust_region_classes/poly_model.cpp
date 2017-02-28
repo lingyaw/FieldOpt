@@ -33,17 +33,19 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
     else{needs_evals_ = false;}
 
     is_model_complete_ = false;
+    complete_points_abs();
+
+
 }
 
 Optimization::Case* PolyModel::CaseFromPoint(Eigen::VectorXd point, Optimization::Case *prototype) {
 
-    std::cout<<" creat new case from point "<< point<<std::endl;
+    std::cout<<" Create new case from point "<< point<<std::endl;
     // In order for case to exist outside poly_model, we use the new operator
     Optimization::Case *new_case = new Optimization::Case(prototype);
     new_case->SetRealVarValues(point);
     new_case->set_objective_function_value(std::numeric_limits<double>::max());
     //objective value must be changed to not evalated, i.e. MAXLIMITSDOUBLE
-    std::cout<<" real variables of this new case is  "<<new_case->GetRealVarVector()<<std::endl;
     return new_case;
 }
 
@@ -126,34 +128,14 @@ Eigen::VectorXd PolyModel::find_new_point(Polynomial basis_function) {
 
     return best_point;
 }
+//complete interpolation points scaled to a ball of radius 1 around origin
 
-void PolyModel::complete_points() {
-    // Complete set of interpolation points so
-    // that the set is well-poised
-
-    /* Pivot element tolerance. Note that we can always find
-     * an element inside the ball of radius one in order to
-     * get as close as we want to 0.25. It might however be clever
-     * to lower this tolerance in order to preserve as many stored
-     * function evaluations as possible.
-     */
-    double tol_pivot = 0.10;
+void PolyModel::complete_points_abs() {
     Eigen::VectorXd centre_point = points_.at(0);
-
-    /* scaling points to a ball of radius 1
-     * and center at center_ (first point of
-     * the points list)
-     */
-    QList<Eigen::VectorXd> points_abs;
-   // std::cout<<"n_points is( inital) "<<points_.length()<<std::endl;
-
-    for (int i = 0; i < points_.length(); ++i) {
-        points_abs.append((1/radius_)*(get_points().at(i) - centre_point));
-        std::cout << " i = " << i << std::endl;
-        //std::cout <<"points_().at "<<i<< points_.at(i)<<std::endl;
-        std::cout <<"points_abs.at" <<i<< points_abs.at(i)<<std::endl;
-
-    }
+    // points_abs=scaled interpolation point.
+    // points_abs.at(0) is always zero
+    points_abs.append(points_.at(0) - centre_point);
+    std::cout<<" the first element in points_abs is "<<points_abs.at(0)<<std::endl;
 
     int n_Polynomials = basis_.length();
     int n_points = points_.length();
@@ -161,78 +143,18 @@ void PolyModel::complete_points() {
 
     for (int i = 0; i < n_Polynomials; i++) {
         Polynomial cur_pol = temp_basis.at(i);
-        double max_abs = 0.0;
-        int max_abs_ind = -1;
-        for (int j = i; j < n_points; ++j) {
-            //std::cout << " i = " << i << std::endl;
-            //std::cout<<"n_points is "<<n_points<<std::endl;
-            //std::cout << " j = " << j << std::endl;
-            /* If new max value, and within a distance radius_ of center point,
-             * accept this point as the currently best point.
-             * Note that we have scaled the points so we only need to
-             * check that the norm of the current points is <=1
-             */
-            if (fabs(cur_pol.evaluate(points_abs.at(j))) > max_abs && points_abs.at(j).norm() <= 1) {
-                //std::cout << " i = " << i << std::endl;
-                //std::cout <<"points_abs.at(i).norm is" <<points_abs.at(i).norm()<<std::endl;
-
-               //std::cout <<"points_abs.at(j).norm is" <<points_abs.at(j).norm()<<std::endl;
-                max_abs = fabs(cur_pol.evaluate(points_abs.at(j)));
-                max_abs_ind = j;
-               // std::cout <<"max_abs_ind is" <<j<<std::endl;
-               // std::cout <<"this point is" <<points_abs.at(j)<<std::endl;
-
-            }
+        if(i==0){
+            std::cout << "we don't need to find new point, basis polynomial, i = " << i << std::endl;
+            std::cout << " This point is "<<points_abs.at(i)<<std::endl;
         }
+        else{
+        std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
+        Polynomial temp_poly_here = temp_basis.at(i);
 
-        /* If evaluation in pivot element is greater than threshold,
-         * switch elements
-         * and its associated function evaluations.
-         */
-        if (max_abs > tol_pivot) {
-            std::cout << "didn't need to find new point, basis polynomial, i = " << i << std::endl;
-            std::cout <<"final max_abs_ind is" <<max_abs_ind<<std::endl;
-            //YES sufficient pivot element aka. good point
-            points_abs.swap(i, max_abs_ind);
-            cases_.swap(i, max_abs_ind);
-            std::cout<<"this final point is "<< points_abs.at(i)<<std::endl;
-        }
-        else {
-            std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
-            //NO sufficient pivot element aka. good point
-            //Find new point using alg proposed by Conn
-            Polynomial temp_poly_here = temp_basis.at(i);
-
-            // Append new point and swap it to current position
-            points_abs.append(find_new_point(temp_poly_here));
-            points_abs.swap(i, points_abs.length() - 1);
-            std::cout<<"this point is "<< points_abs.at(i)<<std::endl;
-            // Make and append new case (remember to scale point back first)
-            std::cout<<"center point is  "<< centre_point<<std::endl;
-            Eigen::VectorXd newpoint=centre_point + radius_*points_abs.at(i);
-            std::cout<<"new interpolation point sent to CaseFromPoint is  "<< newpoint<<std::endl;
-            cases_.append(CaseFromPoint(centre_point + radius_*points_abs.at(i), cases_.at(0)));
-            int end=cases_.size()-1;
-            int a=points_abs.length() - 1;
-
-            cases_.swap(i, cases_.size() - 1);
-
-            Eigen::VectorXd point=cases_.at(i)->GetRealVarVector();
-
-            // Append case to list of unevaluated cases
-            cases_not_eval_.append(cases_.at(i));
-            //Eigen::VectorXd point=cases_not_eval_.at(end)->GetRealVarVector();
-            needs_evals_ = true;
-
-            //TODO: TEST PRINTING BELOW
-
-            //if(i==-1){
-            //    std::cout << "current polynomial = " << std::endl << temp_poly_here.return_coeffs() << std::endl;
-                std::cout << "found point = " << std::endl << points_abs.at(i) << std::endl;
-            //    std::cout << "poly(point) = " << temp_poly_here.evaluate(points_abs.at(i)) << std::endl;
-            //}
-            //std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
-        }
+        // Append new point and swap it to current position
+        points_abs.append(find_new_point(temp_poly_here));
+        //points_abs.swap(i, points_abs.length() - 1);
+        std::cout<<"this point is "<< points_abs.at(i)<<std::endl;
 
         Polynomial temp_i = temp_basis.at(i);
         auto temp_point = points_abs.at(i);
@@ -252,30 +174,38 @@ void PolyModel::complete_points() {
             ui.multiply(-1.0 * ratio);
             uj.add(ui);
             temp_basis[j] = uj;
-        }
+        }}
 
     }
 
+}
+
+// scale points back, complete interpolation points
+void PolyModel::complete_points() {
+    int n_Polynomials = basis_.length();
+    std::cout<<"n_Plynomials is "<<n_Polynomials<<std::endl;
+    Eigen::VectorXd centre_point = points_.at(0);
+    std::cout<< "for i= 0" <<std::endl;
+    std::cout<< "This interpolation point is  " <<points_.at(0)<<std::endl;
     // Scale points back
-    QList<Eigen::VectorXd> points_scaled;
-    for (int i = 0; i < n_Polynomials; ++i) {
-        points_scaled.append(centre_point + radius_*points_abs.at(i));
+    for (int i = 1; i < n_Polynomials; ++i) {
+        points_.append(centre_point + radius_*points_abs.at(i));
+        std::cout<< "for i= " <<i<<std::endl;
+        std::cout<< "This interpolation point is  " <<points_.at(points_.size()-1)<<std::endl;
+
+        //creat case from new interpolation point
+
+        cases_.append(CaseFromPoint(centre_point + radius_*points_abs.at(i), cases_.at(0)));
+        std::cout<< "  for i=  " << i << " point of cases_.at(i) is "<< cases_.at(i)->GetRealVarVector()<<std::endl;
+
+        // Append case to list of unevaluated cases
+        cases_not_eval_.append(cases_.at(i));
+        std::cout<< " send point to cases_not_eval "<< cases_not_eval_.at(cases_not_eval_.size()-1)->GetRealVarVector()<<std::endl;
+
+        //Eigen::VectorXd point=cases_not_eval_.at(end)->GetRealVarVector();
+        needs_evals_ = true;
+        needs_set_of_points_ = false;
     }
-
-    needs_set_of_points_ = false;
-    points_ = points_scaled;//
-    std::cout << "length of points_ after completing points " << points_.length() << std::endl;
-    std::cout << "length of points_abs after completing points " << points_abs.length() << std::endl;
-    std::cout << "length of points_scaled after scaling points back " << points_scaled.length() << std::endl;
-    std::cout << "center point after completing points " << centre_point << std::endl;
-    std::cout << "radius after completing points  " << radius_ << std::endl;
-    for (int i = 0; i < n_Polynomials; ++i) {
-        std::cout << "i= " << i << std::endl;
-        std::cout << " Interpolation point is " <<points_.at(i) << std::endl;
-
-    }
-
-
 }
 
 void PolyModel::calculate_model_coeffs() {
@@ -310,7 +240,7 @@ Eigen::VectorXd PolyModel::optimizationStep_NG() {
     Polynomial Poly = Polynomial(dimension_, coeffs);
     Eigen::VectorXd negative_grad=-Poly.evaluateGradient(center_);// negative gradient(gradient descent)
     Eigen::VectorXd unit_grad=negative_grad/negative_grad.norm();
-    optimization_step_NG=radius_*unit_grad; // Optimizationstep at subregion boundary based on G
+    optimization_step_NG=1*unit_grad; // Optimizationstep at subregion boundary based on G
     std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_NG <<std::endl;
     // TODO: use gradient eval function in Polynomial class to get grad, then opt step
     return optimization_step_NG;
@@ -332,27 +262,22 @@ Eigen::VectorXd PolyModel::optimizationStep_SDL() {
 
 void PolyModel::addCenterPoint(Eigen::VectorXd NewCenterPoint) {
     Optimization::Case *newBaseCase=CaseFromPoint(NewCenterPoint,cases_.at(0));//get new BaseCase from NewCenterPoint
+    //clear points_ and cases_
+    cases_ = QList<Optimization::Case*>();
+    points_= QList<Eigen::VectorXd> ();
+
+    // add newBaseCase to cases_and cases_not_eval
     cases_.append(newBaseCase);
     cases_not_eval_.append(newBaseCase);
     points_.append(NewCenterPoint);
-    points_.swap(0,points_.size()-1);
-    cases_.swap(0,cases_.size()-1);
     center_ = points_.at(0);
+
     is_model_complete_ = false;
     needs_set_of_points_ = true;
     needs_evals_= true;
-    // cases_.append(c);
-    // Add to list of unevaluated cases if not yet evaluated
-    //if (c->objective_function_value() == std::numeric_limits<double>::max())
-        //cases_not_eval_.append(c);
-   // points_.append(c->GetRealVarVector());
-    // Put points in correct position, i.e. first in array
-    //points_.swap(0,points_.size()-1);
-   // cases_.swap(0,points_.size()-1);
-   // center_ = points_.at(0);
-    // Set model not yet ready
-   // is_model_complete_ = false;
+
 }
+
 
 double PolyModel::obejctive_function_value_model() {
     Polynomial polynomial=Polynomial(dimension_,get_model_coeffs());

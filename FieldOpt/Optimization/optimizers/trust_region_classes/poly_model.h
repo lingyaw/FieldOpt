@@ -23,6 +23,7 @@ class PolyModel {
 
 private:
     // Member variables
+    QList<Eigen::VectorXd> points_abs;
     QList<Eigen::VectorXd> points_;
     QList<Optimization::Case*> cases_; //!< All cases, might or might not be evaluated
     QList<Optimization::Case*> cases_not_eval_; //!< Cases that need to be sent to case_handler
@@ -130,6 +131,7 @@ public:
      * by C. Giuliani
      */
     void complete_points();
+    void complete_points_abs();
 
     /*!
      * @brief Calculate coefficients of quadratic model
