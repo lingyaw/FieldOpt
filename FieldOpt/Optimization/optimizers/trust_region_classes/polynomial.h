@@ -7,7 +7,7 @@
 
 #include <Eigen/Dense>
 #include <iostream>
-
+#include <QList>
 /*!
  * @brief The Polynomial class is an implementation to describe second
  * order polynomials with the natural monomial basis of second order polynomials.
@@ -17,6 +17,7 @@ private:
     int dimension_;
     int no_elemts_;
     Eigen::VectorXd coeffs_;
+    Eigen::MatrixXd Hessian_Matrix;
 
 public:
     /*!
@@ -55,6 +56,24 @@ public:
      * @return gradient value.
      */
     Eigen::VectorXd evaluateGradient(Eigen::VectorXd point);
+
+
+    /*!
+   * @brief Evaluates Hessian matrix of  model in a given input point.
+   * @param gradient evaluation point.
+   * @return Hessian matrix.
+   */
+    Eigen::MatrixXd  Hessian();
+
+    Eigen::VectorXd Cauchy_Point(Eigen::VectorXd points);
+
+    Eigen::VectorXd Newton_Point(Eigen::VectorXd points);
+
+
+
+
+
+
 
     /*!
      * @brief Adds (the coefficients of) a polynomial to *this polynomial

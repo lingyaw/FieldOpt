@@ -67,6 +67,67 @@ Eigen::VectorXd Polynomial::evaluateGradient(Eigen::VectorXd point) {
 
 }
 
+
+Eigen::MatrixXd  Polynomial::Hessian(){
+    std::cout<<"Find Hessian Matrix"<<std::endl;
+    /* Hessian matrix is a square matrix of second-order
+     * partial derivative of a scalar-valued function.
+     * for quadratic poly model, Hessian matrix only depend on cofficients
+ */
+    Eigen::MatrixXd B=Eigen::MatrixXd::Zero(dimension_,dimension_);
+
+    for(int i=0; i<dimension_; ++i){
+            B(i,i)=coeffs_(dimension_+i+1);
+    }
+
+    for (int i=0;i<dimension_; ++i){
+        int k=0;
+        for (int j=i+1;j<dimension_; ++j) {
+                int a = ((dimension_ + 1) + (dimension_ - i)) * (i + 2) / 2 + k;;
+                B(i,j) = coeffs_(a);
+                B(j,i)=B(i,j);
+                 k=k+1;
+
+        }
+        }
+
+    std::cout<< "Here is the Hessian matrix B :\n"<< B <<std::endl;
+    Hessian_Matrix=B;
+
+ return Hessian_Matrix;
+}
+
+Eigen::VectorXd Polynomial::Cauchy_Point(Eigen::VectorXd points)
+{
+   // Eigen::MatrixXd Hessian_Matrix=Hessian();
+    Eigen::MatrixXd Inverse_Matrix=Hessian_Matrix.inverse();
+    std::cout<<"Find inverse Hessian Matrix:\n"<<Inverse_Matrix<<std::endl;
+    Eigen::VectorXd grad=evaluateGradient(points);
+    Eigen::VectorXd Newton_Point=-Inverse_Matrix*grad;
+    std::cout<<"The Quasi-Newton Point is:\n"<<Newton_Point<<std::endl;
+    std::cout<<"length of Newton Point is:\n"<<Newton_Point.norm()<<std::endl;
+    std::cout<<"objective function value of current Point is:\n"<<evaluate(points)<<std::endl;
+    std::cout<<"objective function value of Newton Point is:\n"<<evaluate(Newton_Point)<<std::endl;
+    return Newton_Point;
+
+}
+
+Eigen::VectorXd Polynomial:: Newton_Point(Eigen::VectorXd points) {
+
+    //Eigen::MatrixXd Hessian_Matrix=Hessian();
+    Eigen::MatrixXd Inverse_Matrix=Hessian_Matrix.inverse();
+    std::cout<<"Find inverse Hessian Matrix:\n"<<Inverse_Matrix<<std::endl;
+    Eigen::VectorXd grad=evaluateGradient(points);
+    Eigen::VectorXd Newton_Point=-Inverse_Matrix*grad;
+    std::cout<<"The Quasi-Newton Point is:\n"<<Newton_Point<<std::endl;
+    std::cout<<"length of Newton Point is:\n"<<Newton_Point.norm()<<std::endl;
+    std::cout<<"objective function value of current Point is:\n"<<evaluate(points)<<std::endl;
+    std::cout<<"objective function value of Newton Point is:\n"<<evaluate(Newton_Point)<<std::endl;
+    return Newton_Point;
+
+}
+
+
 void Polynomial::add(Polynomial poly) {
 
     if(poly.return_no_elements()!= no_elemts_){

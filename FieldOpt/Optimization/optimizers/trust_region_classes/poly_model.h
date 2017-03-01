@@ -1,7 +1,6 @@
 //
 // Created by cutie on 07.10.16.
 //
-
 #ifndef FIELDOPT_POLY_MODEL_H
 #define FIELDOPT_POLY_MODEL_H
 

@@ -240,7 +240,7 @@ Eigen::VectorXd PolyModel::optimizationStep_NG() {
     Polynomial Poly = Polynomial(dimension_, coeffs);
     Eigen::VectorXd negative_grad=-Poly.evaluateGradient(center_);// negative gradient(gradient descent)
     Eigen::VectorXd unit_grad=negative_grad/negative_grad.norm();
-    optimization_step_NG=1*unit_grad; // Optimizationstep at subregion boundary based on G
+    optimization_step_NG=0.5*unit_grad; // Optimizationstep at subregion boundary based on G
     std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_NG <<std::endl;
     // TODO: use gradient eval function in Polynomial class to get grad, then opt step
     return optimization_step_NG;
