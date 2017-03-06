@@ -33,6 +33,7 @@ private:
     bool is_model_complete_; //!< Bool that is set true whenever a model has been build for current center point and radius
 
     Eigen::VectorXd center_;
+    Eigen::VectorXd grad;
     double radius_;
     int dimension_;
     QList<Polynomial> basis_; //!< Monomial basis of model, usually quadratic
@@ -158,6 +159,7 @@ public:
     */
 
     Eigen::VectorXd optimizationStep_SDL();
+    Eigen::VectorXd Gradient();
 
     Eigen::VectorXd get_centerpoint(){
         return center_;

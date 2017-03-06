@@ -15,10 +15,10 @@ namespace Optimization {
         void TrustRegionSearch::scaleRadius(double k)
         {
             std::cout << "Radius before scaling is  " << radius_ << std::endl;
-            std::cout << " factor k is  " << k<< std::endl;
+            std::cout << " Factor k is  " << k<< std::endl;
             radius_ = k*radius_;
             polymodel_.setRadius(radius_);
-            std::cout << "radius after scaling is " << radius_ << std::endl;
+            std::cout << "Radius after scaling is " << radius_ << std::endl;
         }
 
         //tentative_best_case_=base_case(Optimizer(settings,base_case,variable,grid)
@@ -26,16 +26,22 @@ namespace Optimization {
 
         Optimizer::TerminationCondition TrustRegionSearch::IsFinished()
         {
-            if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
-                return MAX_EVALS_REACHED;
-            else if (radius_ < minimum_radius_)
-                return MINIMUM_STEP_LENGTH_REACHED;
-            else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
+            if (iteration_ == 0) return NOT_FINISHED;
+            else if (case_handler_->QueuedCases().size() > 0 ) return NOT_FINISHED;
+                else if (grad_norm>=epsilon) return NOT_FINISHED;
+            else return MAX_EVALS_REACHED;
+
+
+           // else if (radius_ < minimum_radius_)
+             //   return MINIMUM_STEP_LENGTH_REACHED;
+
         }
 
+
+
         void TrustRegionSearch::iterate() {
-            std::cout << "run iterate() and create interpolation points " << std::endl;
-            std::cout << "this is iteration number " << iteration_ << std::endl;
+            std::cout << "Run iterate() and create interpolation points " << std::endl;
+            std::cout << "This is iteration:\n " << iteration_ << std::endl;
             /* Everytime we update model we must first have a PolyModel object,
              * then we must complete the set of points in the model, then the
              * objective values of all cases must be calculated, and lastly we
@@ -48,7 +54,6 @@ namespace Optimization {
             if (iteration_ == 0) {
                 std:: cout << "Initializing polymodel and completing points" << std::endl;
                 initializeModel();
-                std::cout <<"Is model completed  after initializeModel? "<<polymodel_.isModelReady() << std::endl;
 
 
             }
@@ -56,20 +61,12 @@ namespace Optimization {
             /* Either the PolyModel is ready to give us a derivative, or
              * we need to update points or get cases evaluated
              */
-            else if(!polymodel_.isModelReady()) {
+            else  {
                 std:: cout << "Model is not ready, Completing model first" << std::endl;
                 completeModel();
 
             }
 
-            else {
-
-                std::cout << "Is model completed (else)? " << polymodel_.isModelReady() << std::endl;
-                std::cout << "Model should be ready, we make some opt step " << std::endl;
-                //TODO Here we can use current_model to do an optimization step, which
-                optimizationStep();
-                std::cout << "end of opt step part" << std::endl;
-            }
 
             case_handler_->ClearRecentlyEvaluatedCases();
             iteration_++;
@@ -89,6 +86,7 @@ namespace Optimization {
             polymodel_.ClearCasesNotEval(); // needs_evals=false
             //polymodel_.set_model_complete(); //is_model_complete=true
             polymodel_.set_evaluations_complete();
+            need_optimization_step= true;
         }
 
         void TrustRegionSearch::optimizationStep() // we dont need Perturbation, gradient descent og dog-leg method
@@ -98,6 +96,7 @@ namespace Optimization {
                 std::cout << "All cases have been evaluated, we make optimization step now " << std::endl;
 
                 polymodel_.calculate_model_coeffs();
+                grad_norm=polymodel_.Gradient().norm();
                 Eigen::VectorXd optimizationstep;
 
                 /* optimizationstep from polymodel for minimum value.
@@ -107,44 +106,85 @@ namespace Optimization {
 
                 if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
                     optimizationstep = -polymodel_.optimizationStep_CP();
+                    //optimizationstep = -polymodel_.optimizationStep_SDL();
+
                     std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
                               << std::endl;
                 } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
                     optimizationstep = polymodel_.optimizationStep_CP();
+                   // optimizationstep = polymodel_.optimizationStep_SDL();
                     std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
                               << std::endl;
                 }
                 // Find point of newCenterPoint which is the best point in current subregion
                 // newCenterpoint=current centerpoint+optimization step
-                Eigen::VectorXd NewCenterPoint = optimizationstep + polymodel_.get_centerpoint();
-                std::cout << "The current Center Point is   " << polymodel_.get_centerpoint() << std::endl;
-                std::cout << "The New Center Point is   " << NewCenterPoint << std::endl;
+                std::cout << "The current Center Point is \n" << polymodel_.get_centerpoint() << std::endl;
+                std::cout << "The objective function value of current center is\n " << polymodel_.obejctive_function_value_model(polymodel_.get_centerpoint()) << std::endl;
+                currentBaseCase=tentative_best_case_;
+                Current_CenterPoint=polymodel_.get_centerpoint();
+                New_CenterPoint = optimizationstep + polymodel_.get_centerpoint();
+                std::cout << "The New Center Point after optimization step is\n" << New_CenterPoint << std::endl;
 
                 // Use the best case in current subregion as a new Base Case for next iteration. Creat this Case from its Point
                 // tentative_best_case=base_case (center point)
-                Case *newBaseCase = polymodel_.CaseFromPoint(NewCenterPoint, tentative_best_case_);
-                polymodel_.addCenterPoint(NewCenterPoint); //needs_set of points=true, is model_complete=false;
+                newBaseCase = polymodel_.CaseFromPoint(New_CenterPoint, tentative_best_case_);
+
+
+                polymodel_.addCenterPoint(New_CenterPoint); //needs_set of points=true, is model_complete=false;
                 //scaleRadius(0.5);
                 //handleEvaluatedCase(newBaseCase);
                 tentative_best_case_ = newBaseCase;
-                std::cout << "points of tentative_best_case is   " << tentative_best_case_->GetRealVarVector() << std::endl;
+                //std::cout << "points of tentative_best_case is   " << tentative_best_case_->GetRealVarVector() << std::endl;
 
                 //calulate the objective function value of new center point (based on polymodel)
                 objective_value = polymodel_.obejctive_function_value_model(tentative_best_case_->GetRealVarVector());
-                std::cout << "the objective function value(of new center point) based on polymodel is "
-                          << objective_value << std::endl;
 
-            }
-            else{
-                std::cout << "The evaluation queue still contains "<<case_handler_->QueuedCases().size()<<"cases"<<std::endl;
+                std::cout << "The objective function value of new center point based on polymodel is "
+                          << objective_value << std::endl;
+                std::cout << "|| g|| at current center point is: " << grad_norm<<std::endl;
+                if(grad_norm<=epsilon){
+                    std::cout << "|| g|| <="<<epsilon<<". This is the final iteration " <<std::endl;
+                }
+                else
+                {
+                    std::cout << "|| g|| >"<<epsilon<<". We should contiue to next iteration"<<std::endl;
+                }
+
+                need_optimization_step= false;
             }
 
 
         }
-        //void  TrustRegionSearch::handleEvaluatedCase(Case *c) {
-         //   if (isImprovement(c))
-          //      tentative_best_case_ = c;
-        //}
+
+        void TrustRegionSearch::newBaseCase_evaluation()
+        {
+                  case_handler_->AddNewCase(newBaseCase);
+                  case_handler_->ClearRecentlyEvaluatedCases();
+        }
+        //check whether the candicate solution is accepted after Optimization Step
+        void TrustRegionSearch::Model_Accuracy()
+        {
+            if(!need_optimization_step){
+
+                double ared=tentative_best_case_->objective_function_value()-newBaseCase->objective_function_value();
+                double pred=polymodel_.obejctive_function_value_model(polymodel_.get_centerpoint())-polymodel_.obejctive_function_value_model(newBaseCase->GetRealVarVector());
+                double rho=ared/pred;
+                if(rho>=0.01)
+                {    tentative_best_case_=newBaseCase;
+                     polymodel_.addCenterPoint(New_CenterPoint);
+                    std::cout <<"Successful iteration, use new base case and keep same radius for next iteration" << grad_norm<<std::endl;
+                }
+                else
+                {
+                    std::cout <<"unsuccessful iteration, use the current base case and reduce radius for next iteration" << grad_norm<<std::endl;
+                    tentative_best_case_=currentBaseCase;
+                    polymodel_.addCenterPoint(Current_CenterPoint);
+                }
+
+            }
+
+        }
+
         QString TrustRegionSearch::GetStatusStringHeader() const
         {
             return QString("%1,%2,%3,%4,%5,%6,%7")

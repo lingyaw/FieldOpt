@@ -8,10 +8,10 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
     cases_.append(initial_case);
     points_.append(initial_case->GetRealVarVector());
     center_ = points_.at(0);
-    std::cout << "center point when creating model is " << center_ << std::endl;
+    std::cout << "Center point when creating model is:\n " << center_ << std::endl;
     radius_ = radius;
-    std::cout << "radius when creating model is " << radius_ << std::endl;
-    std::cout << "objective value of base case is  " << initial_case->objective_function_value()<< std::endl;
+    std::cout << "Radius when creating model is: \n" << radius_ << std::endl;
+    std::cout << "Objective value of current center point is: \n " << initial_case->objective_function_value()<< std::endl;
 
     dimension_ = center_.size();
     QList<Polynomial> basis;
@@ -40,7 +40,7 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
 
 Optimization::Case* PolyModel::CaseFromPoint(Eigen::VectorXd point, Optimization::Case *prototype) {
 
-    std::cout<<" Create new case from point "<< point<<std::endl;
+    //std::cout<<" Create new case from point "<< point<<std::endl;
     // In order for case to exist outside poly_model, we use the new operator
     Optimization::Case *new_case = new Optimization::Case(prototype);
     new_case->SetRealVarValues(point);
@@ -135,7 +135,7 @@ void PolyModel::complete_points_abs() {
     // points_abs=scaled interpolation point.
     // points_abs.at(0) is always zero
     points_abs.append(points_.at(0) - centre_point);
-    std::cout<<" the first element in points_abs is "<<points_abs.at(0)<<std::endl;
+    //std::cout<<" the first element in points_abs is "<<points_abs.at(0)<<std::endl;
 
     int n_Polynomials = basis_.length();
     int n_points = points_.length();
@@ -145,7 +145,7 @@ void PolyModel::complete_points_abs() {
         Polynomial cur_pol = temp_basis.at(i);
         if(i==0){
             std::cout << "we don't need to find new point, basis polynomial, i = " << i << std::endl;
-            std::cout << " This point is "<<points_abs.at(i)<<std::endl;
+           // std::cout << " This point is "<<points_abs.at(i)<<std::endl;
         }
         else{
         std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
@@ -154,7 +154,7 @@ void PolyModel::complete_points_abs() {
         // Append new point and swap it to current position
         points_abs.append(find_new_point(temp_poly_here));
         //points_abs.swap(i, points_abs.length() - 1);
-        std::cout<<"this point is "<< points_abs.at(i)<<std::endl;
+       // std::cout<<"this point is "<< points_abs.at(i)<<std::endl;
 
         Polynomial temp_i = temp_basis.at(i);
         auto temp_point = points_abs.at(i);
@@ -183,24 +183,24 @@ void PolyModel::complete_points_abs() {
 // scale points back, complete interpolation points
 void PolyModel::complete_points() {
     int n_Polynomials = basis_.length();
-    std::cout<<"n_Plynomials is "<<n_Polynomials<<std::endl;
+    //std::cout<<"n_Plynomials is "<<n_Polynomials<<std::endl;
     Eigen::VectorXd centre_point = points_.at(0);
     std::cout<< "for i= 0" <<std::endl;
-    std::cout<< "This interpolation point is  " <<points_.at(0)<<std::endl;
+    std::cout<< "This interpolation point is:\n  " <<points_.at(0)<<std::endl;
     // Scale points back
     for (int i = 1; i < n_Polynomials; ++i) {
         points_.append(centre_point + radius_*points_abs.at(i));
         std::cout<< "for i= " <<i<<std::endl;
-        std::cout<< "This interpolation point is  " <<points_.at(points_.size()-1)<<std::endl;
+        std::cout<< "This interpolation point is:\n " <<points_.at(points_.size()-1)<<std::endl;
 
         //creat case from new interpolation point
 
         cases_.append(CaseFromPoint(centre_point + radius_*points_abs.at(i), cases_.at(0)));
-        std::cout<< "  for i=  " << i << " point of cases_.at(i) is "<< cases_.at(i)->GetRealVarVector()<<std::endl;
+        //std::cout<< "  for i=  " << i << " point of cases_.at(i) is "<< cases_.at(i)->GetRealVarVector()<<std::endl;
 
         // Append case to list of unevaluated cases
         cases_not_eval_.append(cases_.at(i));
-        std::cout<< " send point to cases_not_eval "<< cases_not_eval_.at(cases_not_eval_.size()-1)->GetRealVarVector()<<std::endl;
+        //std::cout<< " send point to cases_not_eval "<< cases_not_eval_.at(cases_not_eval_.size()-1)->GetRealVarVector()<<std::endl;
 
         //Eigen::VectorXd point=cases_not_eval_.at(end)->GetRealVarVector();
         needs_evals_ = true;
@@ -209,7 +209,7 @@ void PolyModel::complete_points() {
 }
 
 void PolyModel::calculate_model_coeffs() {
-    std:: cout << "calculate model coefficent " << std::endl;
+    std:: cout <<"Calculate model coefficent " << std::endl;
     if(!needs_evals_ && !needs_set_of_points_){
         Eigen::MatrixXd M = Eigen::MatrixXd::Zero(basis_.length() ,basis_.length());
         Eigen::VectorXd y = Eigen::VectorXd::Zero(basis_.length());
@@ -227,7 +227,7 @@ void PolyModel::calculate_model_coeffs() {
         Eigen::VectorXd alpha = M.inverse()*y;
         model_coeffs_ = alpha;
         is_model_complete_= true;
-        std::cout << " Current Model coefficient is" <<model_coeffs_<<std::endl;
+        std::cout << "Current Model coefficient is\n" <<model_coeffs_<<std::endl;
 
     }
     else{std::cout << "Model_coefficient alg: Either needs evaluations or set of points not finished yet" << std::endl;}
@@ -235,36 +235,38 @@ void PolyModel::calculate_model_coeffs() {
 
 // Find optimization step along Gradient
 Eigen::VectorXd PolyModel::optimizationStep_CP() {
-    std::cout << " Calculate OptimizationStep" <<std::endl;
+    std::cout << "Calculate OptimizationStep" <<std::endl;
    Eigen::VectorXd coeffs= get_model_coeffs();
     Polynomial Poly = Polynomial(dimension_, coeffs);
+    grad=Poly.evaluateGradient(center_);
     //Find Hessian matrix first
     Poly.Hessian();
-    std::cout<<"Find Cauchy point:\n"<<std::endl;
-    optimization_step_CP= Poly.Cauchy_Point(center_,radius_); // Optimizationstep at subregion boundary based on G
-    std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_CP <<std::endl;
+    std::cout<<"Find Cauchy point:"<<std::endl;
+    optimization_step_CP= Poly.Cauchy_Point(center_,radius_,grad); // Optimizationstep at subregion boundary based on G
+    //std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_CP <<std::endl;
     return optimization_step_CP;
 }
 // Return the intersection of the segment
 // connecting the Cauchy point to the Newton point with the
 // trust region boundary
 Eigen::VectorXd PolyModel::optimizationStep_SDL() {
-    std::cout << " Calculate OptimizationStep" <<std::endl;
+    std::cout << "Calculate OptimizationStep" <<std::endl;
     Eigen::VectorXd coeffs= get_model_coeffs();
     Polynomial Poly = Polynomial(dimension_, coeffs);
+    grad=Poly.evaluateGradient(center_);
     //Find Hessian matrix first
     Poly.Hessian();
-    std::cout<<"Find Cauchy point:\n"<<std::endl;
-    Eigen::VectorXd step_CP= Poly.Cauchy_Point(center_,radius_); // Optimizationstep at subregion boundary based on G
-    std::cout<<"Find Quastion-Newton point:\n"<<std::endl;
-    Eigen::VectorXd step_NT=Poly.Newton_Point(center_,radius_);
-
-
-
-    std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_CP <<std::endl;
+   optimization_step_SDL= Poly.Dogleg_step(center_,radius_,grad); // Optimizationstep at subregion boundary based on G
+    //std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_CP <<std::endl;
 
     return optimization_step_SDL;
 
+}
+Eigen::VectorXd PolyModel::Gradient(){
+    Eigen::VectorXd coeffs= get_model_coeffs();
+    Polynomial Poly = Polynomial(dimension_, coeffs);
+    grad=Poly.evaluateGradient(center_);
+    return grad;
 }
 //Optimization::Case*  PolyModel::find_NewBaseCase(){
 //Eigen::VectorXcd NewCenterPoint=center_+optimization_step;

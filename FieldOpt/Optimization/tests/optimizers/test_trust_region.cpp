@@ -66,22 +66,22 @@ using namespace Optimization::Optimizers;
             int dimension=2;
             int no_elemts_= (dimension+1)*(dimension+2)/2;
             double radius_=1;
-            //Eigen::VectorXd points= Eigen::VectorXd::Random(dimension);
-            //Eigen::VectorXd coeffs_= Eigen::VectorXd::Random(no_elemts_);
-            Eigen::VectorXd points= Eigen::VectorXd::Zero(dimension);
-            points(0)=-0.218801;
-            points(1)=-0.328201;
-            Eigen::VectorXd coeffs_= Eigen::VectorXd::Zero(no_elemts_);
-            coeffs_(3)=2;
-            coeffs_(4)=2;
+            Eigen::VectorXd points= Eigen::VectorXd::Random(dimension);
+            Eigen::VectorXd coeffs_= Eigen::VectorXd::Random(no_elemts_);
+            //Eigen::VectorXd points= Eigen::VectorXd::Zero(dimension);
+            //points(0)=-0.218801;
+            //points(1)=-0.328201;
+            //coeffs_(3)=2;
+            //coeffs_(4)=2;
             std::cout<<"Create polynomial:\n"<<dimension<<std::endl;
             std::cout<<"Dimension is:\n"<<dimension<<std::endl;
             std::cout<<"Point is:\n"<<points<<std::endl;
             std::cout<<"coefficent is:\n"<<coeffs_<<std::endl;
             Polynomial poly=Polynomial(dimension,coeffs_);
             poly.Hessian();
+            Eigen::VectorXd grad=poly.evaluateGradient(points);
             std::cout<<"Find Quastion-Newton point:\n"<<std::endl;
-            poly.Newton_Point(points,radius_);
+            poly.Newton_Point(points,radius_,grad);
             EXPECT_TRUE(true);
 
 
@@ -94,12 +94,12 @@ using namespace Optimization::Optimizers;
             int no_elemts_= (dimension+1)*(dimension+2)/2;
             double radius_=1;
             //Eigen::VectorXd points(2,3);
-            Eigen::VectorXd points= Eigen::VectorXd::Zero(dimension);
-            points(0)=-0.218801;
-            points(1)=-0.328201;
-            Eigen::VectorXd coeffs_= Eigen::VectorXd::Zero(no_elemts_);
-            coeffs_(3)=2;
-            coeffs_(4)=2;
+            Eigen::VectorXd points= Eigen::VectorXd::Random(dimension);
+            //points(0)=-0.218801;
+            //points(1)=-0.328201;
+            Eigen::VectorXd coeffs_= Eigen::VectorXd::Random(no_elemts_);
+            //coeffs_(3)=2;
+            //coeffs_(4)=2;
             std::cout<<"Create polynomial:\n"<<dimension<<std::endl;
             std::cout<<"Dimension is:\n"<<dimension<<std::endl;
             std::cout<<"Point is:\n"<<points<<std::endl;
@@ -107,8 +107,9 @@ using namespace Optimization::Optimizers;
             std::cout<<"Trust region size  is:\n"<<radius_<<std::endl;
             Polynomial poly=Polynomial(dimension,coeffs_);
             poly.Hessian();
+            Eigen::VectorXd grad=poly.evaluateGradient(points);
             std::cout<<"Find Cauchy point:\n"<<std::endl;
-            poly.Cauchy_Point(points,radius_);
+            poly.Cauchy_Point(points,radius_,grad);
             EXPECT_TRUE(true);
 
 
@@ -122,12 +123,12 @@ using namespace Optimization::Optimizers;
             int no_elemts_= (dimension+1)*(dimension+2)/2;
             double radius_=1;
             //Eigen::VectorXd points(2,3);
-            Eigen::VectorXd points= Eigen::VectorXd::Zero(dimension);
-            points(0)=-0.218801;
-            points(1)=-0.328201;
-            Eigen::VectorXd coeffs_= Eigen::VectorXd::Zero(no_elemts_);
-            coeffs_(3)=2;
-            coeffs_(4)=2;
+            Eigen::VectorXd points= Eigen::VectorXd::Random(dimension);
+            //points(0)=-0.218801;
+            //points(1)=-0.328201;
+            Eigen::VectorXd coeffs_= Eigen::VectorXd::Random(no_elemts_);
+            //coeffs_(3)=2;
+            //coeffs_(4)=2;
             std::cout<<"Create polynomial:\n"<<dimension<<std::endl;
             std::cout<<"Dimension is:\n"<<dimension<<std::endl;
             std::cout<<"Point is:\n"<<points<<std::endl;
@@ -135,8 +136,9 @@ using namespace Optimization::Optimizers;
             std::cout<<"Trust region size  is:\n"<<radius_<<std::endl;
             Polynomial poly=Polynomial(dimension,coeffs_);
             poly.Hessian();
+            Eigen::VectorXd grad=poly.evaluateGradient(points);
             std::cout<<"Find Dogleg step :\n"<<std::endl;
-            poly.Dogleg_step(points,radius_);
+            poly.Dogleg_step(points,radius_,grad);
             EXPECT_TRUE(true);
 
 
@@ -149,14 +151,15 @@ using namespace Optimization::Optimizers;
             test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
             Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
         Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
-        for (int iter = 0; iter < 23; ++iter) {
-            int No_of_case=iter+1;
+            int iter=0;
+            while (!trust_region_search_->IsFinished()) {
+                iter=iter+1;
             Optimization::Case *new_case = trust_region_search_->GetCaseForEvaluation();
-            std::cout << "set objetive function value of case " << No_of_case<< std::endl;
+            //std::cout << "set objetive function value of case " << iter<< std::endl;
             Eigen::VectorXd  point=new_case->GetRealVarVector();
-            std::cout<<"point of this case is"<<point<<std::endl;
+            //std::cout<<"point of this case is\n"<<point<<std::endl;
             new_case->set_objective_function_value(Sphere(new_case->GetRealVarVector()));
-            std::cout << "the objective function valus is " << new_case->objective_function_value()<< std::endl;
+            //std::cout << "the objective function valus is\n " << new_case->objective_function_value()<< std::endl;
             trust_region_search_->SubmitEvaluatedCase(new_case);
             trust_region_search_->optimizationStep();
         }
@@ -164,12 +167,9 @@ using namespace Optimization::Optimizers;
 
             Optimization::Case *tentative_best_final = trust_region_search_->GetTentativeBestCase();
             Eigen::VectorXd  point=tentative_best_final->GetRealVarVector();
-            std::cout<<"point of final tentative_best_ case is"<<point<<std::endl;
-
+            std::cout<<"point of final tentative_best_ case is\n"<<point<<std::endl;
             tentative_best_final->set_objective_function_value(Sphere(tentative_best_final->GetRealVarVector()));
-            std::cout<<"objetive function value of final tentative_best_ case is"<<tentative_best_final->objective_function_value()<<std::endl;
-
-
+            std::cout<<"objetive function value of final tentative_best_ case is\n"<<tentative_best_final->objective_function_value()<<std::endl;
             EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());
         }
 
@@ -180,27 +180,25 @@ using namespace Optimization::Optimizers;
                 test_case_2r_->set_objective_function_value(Matyas(test_case_2r_->GetRealVarVector()));
                 Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
                 Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
-                for (int iter = 0; iter < 11; ++iter) {
-                    int No_of_case=iter+1;
+            int iter=0;
+            while (!trust_region_search_->IsFinished()) {
+                     iter=iter+1;
                     Optimization::Case *new_case = trust_region_search_->GetCaseForEvaluation();
-                    std::cout << "set objetive function value of case " << No_of_case<< std::endl;
-                    Eigen::VectorXd  point=new_case->GetRealVarVector();
-                    std::cout<<"point of this case is"<<point<<std::endl;
+                    //std::cout << "Set objetive function value of case " << iter << std::endl;
+                    Eigen::VectorXd point = new_case->GetRealVarVector();
+                    //std::cout << "Point of this case is \n" << point << std::endl;
                     new_case->set_objective_function_value(Matyas(new_case->GetRealVarVector()));
-                    std::cout << "the objective function valus is " << new_case->objective_function_value()<< std::endl;
+                    //std::cout << "The objective function valus is\n " << new_case->objective_function_value()
+                     //         << std::endl;
                     trust_region_search_->SubmitEvaluatedCase(new_case);
                     trust_region_search_->optimizationStep();
+
                 }
-
-
                 Optimization::Case *tentative_best_final = trust_region_search_->GetTentativeBestCase();
                 Eigen::VectorXd  point=tentative_best_final->GetRealVarVector();
-                std::cout<<"point of final tentative_best_ case is"<<point<<std::endl;
-
+                std::cout<<"Point of final tentative_best_ case is\n"<<point<<std::endl;
                 tentative_best_final->set_objective_function_value(Matyas(tentative_best_final->GetRealVarVector()));
-                std::cout<<"objetive function value of final tentative_best_ case is"<<tentative_best_final->objective_function_value()<<std::endl;
-
-
+                std::cout<<"Exact objetive function value of final tentative_best_ case is\n"<<tentative_best_final->objective_function_value()<<std::endl;
                 EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());
             }
 }

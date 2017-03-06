@@ -66,11 +66,11 @@ public:
     Eigen::MatrixXd  Hessian();
 
 
-    Eigen::VectorXd Cauchy_Point(Eigen::VectorXd points,double radius_);
+    Eigen::VectorXd Cauchy_Point(Eigen::VectorXd points,double radius_,Eigen::VectorXd grad);
 
-    Eigen::VectorXd Newton_Point(Eigen::VectorXd points,double radius_);
+    Eigen::VectorXd Newton_Point(Eigen::VectorXd points,double radius_,Eigen::VectorXd grad);
 
-    Eigen::VectorXd Dogleg_step(Eigen::VectorXd points,double radius_);
+    Eigen::VectorXd Dogleg_step(Eigen::VectorXd points,double radius_,Eigen::VectorXd grad);
 
 
 
