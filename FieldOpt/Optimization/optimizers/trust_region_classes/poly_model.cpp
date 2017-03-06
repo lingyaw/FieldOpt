@@ -234,21 +234,34 @@ void PolyModel::calculate_model_coeffs() {
 }
 
 // Find optimization step along Gradient
-Eigen::VectorXd PolyModel::optimizationStep_NG() {
+Eigen::VectorXd PolyModel::optimizationStep_CP() {
     std::cout << " Calculate OptimizationStep" <<std::endl;
    Eigen::VectorXd coeffs= get_model_coeffs();
     Polynomial Poly = Polynomial(dimension_, coeffs);
-    Eigen::VectorXd negative_grad=-Poly.evaluateGradient(center_);// negative gradient(gradient descent)
-    Eigen::VectorXd unit_grad=negative_grad/negative_grad.norm();
-    optimization_step_NG=0.5*unit_grad; // Optimizationstep at subregion boundary based on G
-    std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_NG <<std::endl;
-    // TODO: use gradient eval function in Polynomial class to get grad, then opt step
-    return optimization_step_NG;
+    //Find Hessian matrix first
+    Poly.Hessian();
+    std::cout<<"Find Cauchy point:\n"<<std::endl;
+    optimization_step_CP= Poly.Cauchy_Point(center_,radius_); // Optimizationstep at subregion boundary based on G
+    std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_CP <<std::endl;
+    return optimization_step_CP;
 }
-
+// Return the intersection of the segment
+// connecting the Cauchy point to the Newton point with the
+// trust region boundary
 Eigen::VectorXd PolyModel::optimizationStep_SDL() {
-    // TODO: Find the Optimization step by single dog-leg method and return to optimizaiton_step_SDL
+    std::cout << " Calculate OptimizationStep" <<std::endl;
+    Eigen::VectorXd coeffs= get_model_coeffs();
+    Polynomial Poly = Polynomial(dimension_, coeffs);
+    //Find Hessian matrix first
+    Poly.Hessian();
+    std::cout<<"Find Cauchy point:\n"<<std::endl;
+    Eigen::VectorXd step_CP= Poly.Cauchy_Point(center_,radius_); // Optimizationstep at subregion boundary based on G
+    std::cout<<"Find Quastion-Newton point:\n"<<std::endl;
+    Eigen::VectorXd step_NT=Poly.Newton_Point(center_,radius_);
 
+
+
+    std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_CP <<std::endl;
 
     return optimization_step_SDL;
 

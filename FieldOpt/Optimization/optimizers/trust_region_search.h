@@ -46,6 +46,9 @@ namespace Optimization {
 
             void perturb();
 
+            double grad_norm=1;
+            double epsilon=0.001;
+
             // Optimizer interface
         public:
             /*!

@@ -97,35 +97,104 @@ Eigen::MatrixXd  Polynomial::Hessian(){
  return Hessian_Matrix;
 }
 
-Eigen::VectorXd Polynomial::Cauchy_Point(Eigen::VectorXd points)
-{
-   // Eigen::MatrixXd Hessian_Matrix=Hessian();
-    Eigen::MatrixXd Inverse_Matrix=Hessian_Matrix.inverse();
-    std::cout<<"Find inverse Hessian Matrix:\n"<<Inverse_Matrix<<std::endl;
-    Eigen::VectorXd grad=evaluateGradient(points);
-    Eigen::VectorXd Newton_Point=-Inverse_Matrix*grad;
-    std::cout<<"The Quasi-Newton Point is:\n"<<Newton_Point<<std::endl;
-    std::cout<<"length of Newton Point is:\n"<<Newton_Point.norm()<<std::endl;
-    std::cout<<"objective function value of current Point is:\n"<<evaluate(points)<<std::endl;
-    std::cout<<"objective function value of Newton Point is:\n"<<evaluate(Newton_Point)<<std::endl;
-    return Newton_Point;
+Eigen::VectorXd Polynomial::Cauchy_Point(Eigen::VectorXd points, double radius_)
+{      Eigen::VectorXd grad=evaluateGradient(points);
+
+    double gBg=grad.transpose()*Hessian_Matrix*grad;
+    //std::cout<<"gBg is: "<<gBg<<std::endl;
+    double tau;
+   if(gBg <=0) {
+       std::cout<<"gbg <0 "<<std::endl;
+       tau=1;
+   }
+   else {
+       double length=grad.norm()*grad.norm()*grad.norm()/(radius_*gBg);
+       if (length>=1){
+           std::cout<<"The Cauchy Point lies outside the trust region, then take a step to the boundary along steepest descent direction:"<<std::endl;
+           tau=1;
+       }
+       else{
+           std::cout<<"The Cauchy Point lies inside the trust region,then take Cauchy Point as optimization step size:"<<std::endl;
+           tau=length;
+       }
+
+   }
+    Eigen::VectorXd Cauchy_Point=-tau*radius_*grad/grad.norm();
+    std::cout<<"tau is: "<<tau<<std::endl;
+    std::cout<<"The Cauchy_Point is:\n"<<Cauchy_Point<<std::endl;
+    std::cout<<"length of Cauchy Point is:\n"<<Cauchy_Point.norm()<<std::endl;
+    //std::cout<<"objective function value of current Point is:\n"<<evaluate(points)<<std::endl;
+    //std::cout<<"objective function value of Cauchy Point is:\n"<<evaluate(Cauchy_Point)<<std::endl;
+    return Cauchy_Point;
 
 }
 
-Eigen::VectorXd Polynomial:: Newton_Point(Eigen::VectorXd points) {
+
+Eigen::VectorXd Polynomial:: Newton_Point(Eigen::VectorXd points, double radius_) {
 
     //Eigen::MatrixXd Hessian_Matrix=Hessian();
     Eigen::MatrixXd Inverse_Matrix=Hessian_Matrix.inverse();
-    std::cout<<"Find inverse Hessian Matrix:\n"<<Inverse_Matrix<<std::endl;
+    //std::cout<<"Find inverse Hessian Matrix:\n"<<Inverse_Matrix<<std::endl;
     Eigen::VectorXd grad=evaluateGradient(points);
     Eigen::VectorXd Newton_Point=-Inverse_Matrix*grad;
     std::cout<<"The Quasi-Newton Point is:\n"<<Newton_Point<<std::endl;
     std::cout<<"length of Newton Point is:\n"<<Newton_Point.norm()<<std::endl;
-    std::cout<<"objective function value of current Point is:\n"<<evaluate(points)<<std::endl;
-    std::cout<<"objective function value of Newton Point is:\n"<<evaluate(Newton_Point)<<std::endl;
+    //std::cout<<"objective function value of current Point is:\n"<<evaluate(points)<<std::endl;
+    //std::cout<<"objective function value of Newton Point is:\n"<<evaluate(Newton_Point)<<std::endl;
+    if (Newton_Point.norm()>radius_)
+    {
+        std::cout<<"The Newton Point lies outside the trust region"<<std::endl;
+    }
+    else{
+        std::cout<<"The Newton Point lies inside the trust region"<<std::endl;
+    }
     return Newton_Point;
 
 }
+
+// Newton point lies inside trustregion, cauchy point lies outside trustregion
+
+Eigen::VectorXd  Polynomial::Dogleg_step(Eigen::VectorXd points,double radius_)
+
+{
+    Eigen::VectorXd Dogleg_step;
+    std::cout<<"Find Cauchy point:\n"<<std::endl;
+    Eigen::VectorXd d_cp= Cauchy_Point(points,radius_);
+    std::cout<<"Find Quastion-Newton point:\n"<<std::endl;
+    Eigen::VectorXd d_nw=Newton_Point(points, radius_);
+    if(d_cp.norm()>=radius_)
+    {
+        Dogleg_step=d_cp;
+        std::cout << " Cauchy point lies on the boundary, then take Cauchy point as optimization step:\n" << Dogleg_step <<std::endl;
+    }
+    else if (d_nw.norm()<=radius_){
+        Dogleg_step=d_nw;
+        std::cout << " Both Cauchy point and Quastion-Newton point lie inside trust region, then take Newton point as optimization step:\n" << Dogleg_step <<std::endl;
+
+    }
+    else
+    {
+        std::cout << "Cauchy point lies inside trust region, Quastion-Newton point lies outside trust region, then take Dogleg optimization step:\n" << Dogleg_step <<std::endl;
+         std::cout<<"Find tau such that || d_cp + tau*(d_nw - d_cp) || = radius :\n"<<std::endl;
+        // solve a single quadratic equation
+        double tau;
+        Eigen::VectorXd diff=d_nw-d_cp;
+        double a=diff.dot(diff);
+        double b=2*d_cp.dot(diff);
+        double c=d_cp.dot(d_cp)-radius_*radius_;
+        tau=(-b+sqrt(b*b-4*a*c))/(2*a);
+         std::cout<<"tau is:\n"<<tau<<std::endl;
+        Dogleg_step=d_cp+tau*(d_nw-d_cp);
+        std::cout << "Dogleg optimization step is:\n" << Dogleg_step <<std::endl;
+        std::cout<<"length of Dogleg point is:\n"<<Dogleg_step.norm()<<std::endl;
+    }
+    return Dogleg_step;
+
+}
+
+
+
+
 
 
 void Polynomial::add(Polynomial poly) {

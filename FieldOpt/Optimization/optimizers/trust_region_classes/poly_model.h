@@ -37,7 +37,7 @@ private:
     int dimension_;
     QList<Polynomial> basis_; //!< Monomial basis of model, usually quadratic
     Eigen::VectorXd model_coeffs_; //!< The coefficients of the model using basis
-    Eigen::VectorXd optimization_step_NG;
+    Eigen::VectorXd optimization_step_CP;
     Eigen::VectorXd optimization_step_SDL;
 
     /*!
@@ -148,7 +148,15 @@ public:
     void addCenterPoint(Eigen::VectorXd newCenterPoint);
 
 
-    Eigen::VectorXd optimizationStep_NG();
+    Eigen::VectorXd optimizationStep_CP();
+
+    /*!
+    * @brief find Opt step based on dog-leg method
+    * return to intersection of the segment connecting
+    * the Cauchy point to the Newton point with the
+    * trust region boundary
+    */
+
     Eigen::VectorXd optimizationStep_SDL();
 
     Eigen::VectorXd get_centerpoint(){

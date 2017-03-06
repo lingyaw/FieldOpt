@@ -63,13 +63,17 @@ using namespace Optimization::Optimizers;
 
         // test Newton_Point
    TEST_F(TrustRegionSearchTest, Newton_Point) {
-            test_case_2r_->set_objective_function_value(1000);
-            Optimization::Optimizer *trust_region_search_ = new TrustRegionSearch(
-                    settings_trust_region_search_max_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
             int dimension=2;
             int no_elemts_= (dimension+1)*(dimension+2)/2;
-            Eigen::VectorXd points= Eigen::VectorXd::Random(dimension);
-            Eigen::VectorXd coeffs_= Eigen::VectorXd::Random(no_elemts_);
+            double radius_=1;
+            //Eigen::VectorXd points= Eigen::VectorXd::Random(dimension);
+            //Eigen::VectorXd coeffs_= Eigen::VectorXd::Random(no_elemts_);
+            Eigen::VectorXd points= Eigen::VectorXd::Zero(dimension);
+            points(0)=-0.218801;
+            points(1)=-0.328201;
+            Eigen::VectorXd coeffs_= Eigen::VectorXd::Zero(no_elemts_);
+            coeffs_(3)=2;
+            coeffs_(4)=2;
             std::cout<<"Create polynomial:\n"<<dimension<<std::endl;
             std::cout<<"Dimension is:\n"<<dimension<<std::endl;
             std::cout<<"Point is:\n"<<points<<std::endl;
@@ -77,7 +81,62 @@ using namespace Optimization::Optimizers;
             Polynomial poly=Polynomial(dimension,coeffs_);
             poly.Hessian();
             std::cout<<"Find Quastion-Newton point:\n"<<std::endl;
-            poly.Newton_Point(points);
+            poly.Newton_Point(points,radius_);
+            EXPECT_TRUE(true);
+
+
+        }
+
+        // test Cauchy point
+        TEST_F(TrustRegionSearchTest, Cauchy_Point) {
+
+            int dimension=2;
+            int no_elemts_= (dimension+1)*(dimension+2)/2;
+            double radius_=1;
+            //Eigen::VectorXd points(2,3);
+            Eigen::VectorXd points= Eigen::VectorXd::Zero(dimension);
+            points(0)=-0.218801;
+            points(1)=-0.328201;
+            Eigen::VectorXd coeffs_= Eigen::VectorXd::Zero(no_elemts_);
+            coeffs_(3)=2;
+            coeffs_(4)=2;
+            std::cout<<"Create polynomial:\n"<<dimension<<std::endl;
+            std::cout<<"Dimension is:\n"<<dimension<<std::endl;
+            std::cout<<"Point is:\n"<<points<<std::endl;
+            std::cout<<"coefficent is:\n"<<coeffs_<<std::endl;
+            std::cout<<"Trust region size  is:\n"<<radius_<<std::endl;
+            Polynomial poly=Polynomial(dimension,coeffs_);
+            poly.Hessian();
+            std::cout<<"Find Cauchy point:\n"<<std::endl;
+            poly.Cauchy_Point(points,radius_);
+            EXPECT_TRUE(true);
+
+
+        }
+
+        // test dog-leg step
+
+        TEST_F(TrustRegionSearchTest, Dogleg_step) {
+
+            int dimension=2;
+            int no_elemts_= (dimension+1)*(dimension+2)/2;
+            double radius_=1;
+            //Eigen::VectorXd points(2,3);
+            Eigen::VectorXd points= Eigen::VectorXd::Zero(dimension);
+            points(0)=-0.218801;
+            points(1)=-0.328201;
+            Eigen::VectorXd coeffs_= Eigen::VectorXd::Zero(no_elemts_);
+            coeffs_(3)=2;
+            coeffs_(4)=2;
+            std::cout<<"Create polynomial:\n"<<dimension<<std::endl;
+            std::cout<<"Dimension is:\n"<<dimension<<std::endl;
+            std::cout<<"Point is:\n"<<points<<std::endl;
+            std::cout<<"coefficent is:\n"<<coeffs_<<std::endl;
+            std::cout<<"Trust region size  is:\n"<<radius_<<std::endl;
+            Polynomial poly=Polynomial(dimension,coeffs_);
+            poly.Hessian();
+            std::cout<<"Find Dogleg step :\n"<<std::endl;
+            poly.Dogleg_step(points,radius_);
             EXPECT_TRUE(true);
 
 
@@ -90,7 +149,7 @@ using namespace Optimization::Optimizers;
             test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
             Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
         Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
-        for (int iter = 0; iter < 35; ++iter) {
+        for (int iter = 0; iter < 23; ++iter) {
             int No_of_case=iter+1;
             Optimization::Case *new_case = trust_region_search_->GetCaseForEvaluation();
             std::cout << "set objetive function value of case " << No_of_case<< std::endl;
