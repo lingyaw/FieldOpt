@@ -25,15 +25,18 @@ namespace Optimization {
         // case_handler_ = new CaseHandler(tentative_best_case_);
 
         Optimizer::TerminationCondition TrustRegionSearch::IsFinished()
-        {
-            if (iteration_ == 0) return NOT_FINISHED;
+        {   //std::cout<<"EvauatedCases().size()"<<case_handler_->EvaluatedCases().size()<<std::endl;
+           // std::cout<<"queuedCases().size()"<<case_handler_->QueuedCases().size()<<std::endl;
+           //  std::cout<<"grad.norm"<<grad_norm<<std::endl;
+            if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
+                return MAX_EVALS_REACHED;
+            else if (radius_ < minimum_radius_)
+                return MINIMUM_STEP_LENGTH_REACHED;
+            else if (iteration_ == 0) return NOT_FINISHED;
             else if (case_handler_->QueuedCases().size() > 0 ) return NOT_FINISHED;
-                else if (grad_norm>=epsilon) return NOT_FINISHED;
+            else if (grad_norm>=epsilon) return NOT_FINISHED;
             else return MAX_EVALS_REACHED;
 
-
-           // else if (radius_ < minimum_radius_)
-             //   return MINIMUM_STEP_LENGTH_REACHED;
 
         }
 
@@ -105,14 +108,14 @@ namespace Optimization {
                 */
 
                 if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                    optimizationstep = -polymodel_.optimizationStep_CP();
-                    //optimizationstep = -polymodel_.optimizationStep_SDL();
+                   // optimizationstep = -polymodel_.optimizationStep_CP();
+                    optimizationstep = -polymodel_.optimizationStep_SDL();
 
                     std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
                               << std::endl;
                 } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                    optimizationstep = polymodel_.optimizationStep_CP();
-                   // optimizationstep = polymodel_.optimizationStep_SDL();
+                   // optimizationstep = polymodel_.optimizationStep_CP();
+                    optimizationstep = polymodel_.optimizationStep_SDL();
                     std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
                               << std::endl;
                 }
@@ -120,8 +123,8 @@ namespace Optimization {
                 // newCenterpoint=current centerpoint+optimization step
                 std::cout << "The current Center Point is \n" << polymodel_.get_centerpoint() << std::endl;
                 std::cout << "The objective function value of current center is\n " << polymodel_.obejctive_function_value_model(polymodel_.get_centerpoint()) << std::endl;
-                currentBaseCase=tentative_best_case_;
-                Current_CenterPoint=polymodel_.get_centerpoint();
+               // currentBaseCase=tentative_best_case_;
+               // Current_CenterPoint=polymodel_.get_centerpoint();
                 New_CenterPoint = optimizationstep + polymodel_.get_centerpoint();
                 std::cout << "The New Center Point after optimization step is\n" << New_CenterPoint << std::endl;
 
@@ -150,40 +153,11 @@ namespace Optimization {
                     std::cout << "|| g|| >"<<epsilon<<". We should contiue to next iteration"<<std::endl;
                 }
 
-                need_optimization_step= false;
             }
 
 
         }
 
-        void TrustRegionSearch::newBaseCase_evaluation()
-        {
-                  case_handler_->AddNewCase(newBaseCase);
-                  case_handler_->ClearRecentlyEvaluatedCases();
-        }
-        //check whether the candicate solution is accepted after Optimization Step
-        void TrustRegionSearch::Model_Accuracy()
-        {
-            if(!need_optimization_step){
-
-                double ared=tentative_best_case_->objective_function_value()-newBaseCase->objective_function_value();
-                double pred=polymodel_.obejctive_function_value_model(polymodel_.get_centerpoint())-polymodel_.obejctive_function_value_model(newBaseCase->GetRealVarVector());
-                double rho=ared/pred;
-                if(rho>=0.01)
-                {    tentative_best_case_=newBaseCase;
-                     polymodel_.addCenterPoint(New_CenterPoint);
-                    std::cout <<"Successful iteration, use new base case and keep same radius for next iteration" << grad_norm<<std::endl;
-                }
-                else
-                {
-                    std::cout <<"unsuccessful iteration, use the current base case and reduce radius for next iteration" << grad_norm<<std::endl;
-                    tentative_best_case_=currentBaseCase;
-                    polymodel_.addCenterPoint(Current_CenterPoint);
-                }
-
-            }
-
-        }
 
         QString TrustRegionSearch::GetStatusStringHeader() const
         {

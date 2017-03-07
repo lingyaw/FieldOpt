@@ -147,10 +147,30 @@ using namespace Optimization::Optimizers;
         // sphere function, build model
 
         // test sphere
+
+
     TEST_F(TrustRegionSearchTest, Spherefunction) {
-            test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
-            Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
-        Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
+             // 2 real variables
+           // test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
+          //  Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
+
+
+             test_case_2_3r_->set_objective_function_value(Sphere(test_case_2_3r_->GetRealVarVector()));
+            Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_3r_, varcont_prod_bhp_, grid_5spot_);
+
+            // 4 real varibales
+             //test_case_2_4r_->set_objective_function_value(Sphere(test_case_2_4r_->GetRealVarVector()));
+             //Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_4r_, varcont_prod_bhp_, grid_5spot_);
+
+            // 19 variables
+           // test_case_2_19r_->set_objective_function_value(Sphere(test_case_2_19r_->GetRealVarVector()));
+            //Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_19r_, varcont_prod_bhp_, grid_5spot_);
+
+
+            // 19 real variables
+           // base_case_->set_objective_function_value(Sphere(base_case_->GetRealVarVector()));
+           // Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_optimizer_, base_case_, model_->variables(), grid_5spot_);
+            Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
             int iter=0;
             while (!trust_region_search_->IsFinished()) {
                 iter=iter+1;
@@ -177,7 +197,7 @@ using namespace Optimization::Optimizers;
 
         // Test matyas function for two variables
             TEST_F(TrustRegionSearchTest, Matyasfunction) {
-                test_case_2r_->set_objective_function_value(Matyas(test_case_2r_->GetRealVarVector()));
+                 test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
                 Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
                 Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
             int iter=0;

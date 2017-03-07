@@ -26,6 +26,8 @@ namespace TestResources {
                                                        varcont_prod_spline_->GetContinousVariableValues());
 
             test_case_2r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_2d_);
+            test_case_2_4r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_4d_);
+            test_case_2_19r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_19d_);
         }
 
         QList<Optimization::Case *> trivial_cases_;
@@ -62,6 +64,12 @@ namespace TestResources {
          * Two real variables.
          */
         Optimization::Case *test_case_2r_;
+        /* Case:
+        * Four real variables.
+        */
+        Optimization::Case *test_case_2_4r_;
+        Optimization::Case *test_case_2_19r_;
+
 
     private:
         const QHash<QUuid, bool> binary_variables_4d_{
@@ -74,6 +82,34 @@ namespace TestResources {
                 {QUuid::createUuid(), 1},
                 {QUuid::createUuid(), 2},
                 {QUuid::createUuid(), 5}
+        };
+        const QHash<QUuid, double> real_variables_19d_{
+                {QUuid::createUuid(), 1.0},
+                {QUuid::createUuid(), 1.0},
+                {QUuid::createUuid(), 100.0},
+                {QUuid::createUuid(), 500.0},
+                {QUuid::createUuid(), 100.0},
+                {QUuid::createUuid(), 36.0},
+                {QUuid::createUuid(), 1712.0},
+                {QUuid::createUuid(), 12.0},
+                {QUuid::createUuid(), 2000.0},
+                {QUuid::createUuid(), 12.0},
+                {QUuid::createUuid(), 2000.0},
+                {QUuid::createUuid(), 1.0},
+                {QUuid::createUuid(), 12.0},
+                {QUuid::createUuid(), 500.0},
+                {QUuid::createUuid(), 1712.0},
+                {QUuid::createUuid(), 1712.0},
+                {QUuid::createUuid(), 2000.0},
+                {QUuid::createUuid(), 2000.0},
+                {QUuid::createUuid(), 1712.0}
+
+        };
+        const QHash<QUuid, double> real_variables_4d_{
+                {QUuid::createUuid(), 1.0},
+                {QUuid::createUuid(), 4.0},
+                {QUuid::createUuid(), 2.5},
+                {QUuid::createUuid(), 5.5}
         };
         const QHash<QUuid, double> real_variables_3d_{
                 {QUuid::createUuid(), 1.0},

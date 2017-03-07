@@ -203,9 +203,10 @@ void PolyModel::complete_points() {
         //std::cout<< " send point to cases_not_eval "<< cases_not_eval_.at(cases_not_eval_.size()-1)->GetRealVarVector()<<std::endl;
 
         //Eigen::VectorXd point=cases_not_eval_.at(end)->GetRealVarVector();
-        needs_evals_ = true;
-        needs_set_of_points_ = false;
-    }
+         }
+    needs_evals_ = true;
+    needs_set_of_points_ = false;
+    std::cout<< "Interpolation points are completed:\n  " <<std::endl;
 }
 
 void PolyModel::calculate_model_coeffs() {
