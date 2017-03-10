@@ -2,7 +2,8 @@
 
 namespace Runner {
 
-SerialRunner::SerialRunner(Runner::RuntimeSettings *runtime_settings)
+SerialRunner::
+SerialRunner(Runner::RuntimeSettings *runtime_settings)
     : AbstractRunner(runtime_settings)
 {
     InitializeSettings();

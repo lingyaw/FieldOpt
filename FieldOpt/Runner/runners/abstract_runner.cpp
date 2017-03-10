@@ -27,6 +27,7 @@
 #include <Optimization/optimizers/APPS.h>
 #include "abstract_runner.h"
 #include "Optimization/optimizers/compass_search.h"
+#include "Optimization/optimizers/trust_region_search.h"
 #include "Optimization/optimizers/ExhaustiveSearch2DVert.h"
 #include "Optimization/objective/weightedsum.h"
 #include "Simulation/simulator_interfaces/eclsimulator.h"
@@ -179,6 +180,12 @@ namespace Runner {
                 if (runtime_settings_->verbosity_level()) std::cout << "Using ExhaustiveSearch2DVert." << std::endl;
                 optimizer_ = new Optimization::Optimizers::ExhaustiveSearch2DVert(settings_->optimizer(), base_case_,
                                                                                   model_->variables(), model_->grid());
+                optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
+                break;
+            case Settings::Optimizer::OptimizerType::Trustregion:
+                if (runtime_settings_->verbosity_level()) std::cout << "Using Trustregion optimization algorithm." << std::endl;
+                optimizer_ = new Optimization::Optimizers::TrustRegionSearch(settings_->optimizer(), base_case_,
+                                                                             model_->variables(), model_->grid());
                 optimizer_->SetVerbosityLevel(runtime_settings_->verbosity_level());
                 break;
             default:

@@ -156,7 +156,7 @@ using namespace Optimization::Optimizers;
 
 
              test_case_2_3r_->set_objective_function_value(Sphere(test_case_2_3r_->GetRealVarVector()));
-            Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_3r_, varcont_prod_bhp_, grid_5spot_);
+            Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_3r_, varcont_prod_bhp_, grid_5spot_);
 
             // 4 real varibales
              //test_case_2_4r_->set_objective_function_value(Sphere(test_case_2_4r_->GetRealVarVector()));
@@ -181,7 +181,6 @@ using namespace Optimization::Optimizers;
             new_case->set_objective_function_value(Sphere(new_case->GetRealVarVector()));
             //std::cout << "the objective function valus is\n " << new_case->objective_function_value()<< std::endl;
             trust_region_search_->SubmitEvaluatedCase(new_case);
-            trust_region_search_->optimizationStep();
         }
 
 
@@ -198,7 +197,7 @@ using namespace Optimization::Optimizers;
         // Test matyas function for two variables
             TEST_F(TrustRegionSearchTest, Matyasfunction) {
                  test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
-                Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
+            Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
                 Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
             int iter=0;
             while (!trust_region_search_->IsFinished()) {
@@ -211,7 +210,7 @@ using namespace Optimization::Optimizers;
                     //std::cout << "The objective function valus is\n " << new_case->objective_function_value()
                      //         << std::endl;
                     trust_region_search_->SubmitEvaluatedCase(new_case);
-                    trust_region_search_->optimizationStep();
+                    //trust_region_search_->optimizationStep();
 
                 }
                 Optimization::Case *tentative_best_final = trust_region_search_->GetTentativeBestCase();

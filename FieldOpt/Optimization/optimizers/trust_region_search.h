@@ -56,6 +56,7 @@ namespace Optimization {
 
             // Optimizer interface
         public:
+           void SubmitEvaluatedCase(Case *c);
             /*!
              * \brief IsFinished Check if the optimization is finished.
              *

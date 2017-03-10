@@ -67,8 +67,7 @@ namespace Optimization {
          * for termination.
          */
         virtual TerminationCondition IsFinished() = 0;
-        virtual void optimizationStep()=0;
-
+        
         virtual QString GetStatusStringHeader() const; //!< Get the CSV header for the status string.
         virtual QString GetStatusString() const; //!< Get a CSV string describing the current state of the optimizer.
         void EnableConstraintLogging(QString output_directory_path); //!< Enable writing a text log for the constraint operations.

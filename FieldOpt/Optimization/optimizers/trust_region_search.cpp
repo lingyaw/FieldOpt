@@ -91,7 +91,7 @@ namespace Optimization {
             polymodel_.set_evaluations_complete();
             need_optimization_step= true;
         }
-
+/*
         void TrustRegionSearch::optimizationStep() // we dont need Perturbation, gradient descent og dog-leg method
         {
             // all cases must been evaluted first befor optimization step
@@ -102,10 +102,10 @@ namespace Optimization {
                 grad_norm=polymodel_.Gradient().norm();
                 Eigen::VectorXd optimizationstep;
 
-                /* optimizationstep from polymodel for minimum value.
+                *//* optimizationstep from polymodel for minimum value.
                  * Optimization step need to be for maximum value
                  * check model_( maximum or minimum)
-                */
+                *//*
 
                 if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
                    // optimizationstep = -polymodel_.optimizationStep_CP();
@@ -142,7 +142,7 @@ namespace Optimization {
                 //calulate the objective function value of new center point (based on polymodel)
                 objective_value = polymodel_.obejctive_function_value_model(tentative_best_case_->GetRealVarVector());
 
-                std::cout << "The objective function value of new center point based on polymodel is "
+               std::cout << "The objective function value of new center point based on polymodel is "
                           << objective_value << std::endl;
                 std::cout << "|| g|| at current center point is: " << grad_norm<<std::endl;
                 if(grad_norm<=epsilon){
@@ -156,7 +156,7 @@ namespace Optimization {
             }
 
 
-        }
+        }*/
 
 
         QString TrustRegionSearch::GetStatusStringHeader() const
@@ -181,6 +181,75 @@ namespace Optimization {
                     .arg(tentative_best_case_->id().toString())
                     .arg(tentative_best_case_->objective_function_value())
                     .arg(radius_);
+        }
+
+        void TrustRegionSearch::SubmitEvaluatedCase(Case *c) {
+            
+            case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
+            case_handler_->SetCaseEvaluated(c->id());
+            handleEvaluatedCase(case_handler_->GetCase(c->id()));
+
+            // all cases must been evaluted first before optimization step
+            if (case_handler_->QueuedCases().size()==0) {
+                std::cout << "All cases have been evaluated, we make optimization step now " << std::endl;
+
+                polymodel_.calculate_model_coeffs();
+                grad_norm=polymodel_.Gradient().norm();
+                Eigen::VectorXd optimizationstep;
+
+                /* optimizationstep from polymodel for minimum value.
+                 * Optimization step need to be for maximum value
+                 * check model_( maximum or minimum)
+                */
+
+                if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
+                    // optimizationstep = -polymodel_.optimizationStep_CP();
+                    optimizationstep = -polymodel_.optimizationStep_SDL();
+
+                    std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
+                              << std::endl;
+                } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
+                    // optimizationstep = polymodel_.optimizationStep_CP();
+                    optimizationstep = polymodel_.optimizationStep_SDL();
+                    std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
+                              << std::endl;
+                }
+                // Find point of newCenterPoint which is the best point in current subregion
+                // newCenterpoint=current centerpoint+optimization step
+                std::cout << "The current Center Point is \n" << polymodel_.get_centerpoint() << std::endl;
+                std::cout << "The objective function value of current center is\n " << polymodel_.obejctive_function_value_model(polymodel_.get_centerpoint()) << std::endl;
+                // currentBaseCase=tentative_best_case_;
+                // Current_CenterPoint=polymodel_.get_centerpoint();
+                New_CenterPoint = optimizationstep + polymodel_.get_centerpoint();
+                std::cout << "The New Center Point after optimization step is\n" << New_CenterPoint << std::endl;
+
+                // Use the best case in current subregion as a new Base Case for next iteration. Creat this Case from its Point
+                // tentative_best_case=base_case (center point)
+                newBaseCase = polymodel_.CaseFromPoint(New_CenterPoint, tentative_best_case_);
+
+
+                polymodel_.addCenterPoint(New_CenterPoint); //needs_set of points=true, is model_complete=false;
+                //scaleRadius(0.5);
+                //handleEvaluatedCase(newBaseCase);
+                tentative_best_case_ = newBaseCase;
+                //std::cout << "points of tentative_best_case is   " << tentative_best_case_->GetRealVarVector() << std::endl;
+
+                //calulate the objective function value of new center point (based on polymodel)
+                objective_value = polymodel_.obejctive_function_value_model(tentative_best_case_->GetRealVarVector());
+
+                std::cout << "The objective function value of new center point based on polymodel is "
+                          << objective_value << std::endl;
+                std::cout << "|| g|| at current center point is: " << grad_norm<<std::endl;
+                if(grad_norm<=epsilon){
+                    std::cout << "|| g|| <="<<epsilon<<". This is the final iteration " <<std::endl;
+                }
+                else
+                {
+                    std::cout << "|| g|| >"<<epsilon<<". We should contiue to next iteration"<<std::endl;
+                }
+
+            }
+            
         }
 
     }}

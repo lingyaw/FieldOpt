@@ -41,28 +41,28 @@ inline T calc_median(QList<T> list) {
  * @brief The Polynomial class is an implementation to describe second
  * order polynomials with the natural monomial basis of second order polynomials.
  */
-class Polynomial {
+/*class Polynomial {
 private:
     int dimension_;
     int no_elemts_;
     Eigen::VectorXd coeffs_;
 
 public:
-    /*!
+    *//*!
      * @brief Polynomial constructor. Sets coefficients, dimension and calculates number of elements.
      * @param dimension of polynomial.
      * @param An Eigen::VectorXd containing coefficients of polynomial.
      * @return
-     */
+     *//*
     Polynomial(int dimension, Eigen::VectorXd coeffs) {
         dimension_ = dimension;
         coeffs_ = coeffs;
         no_elemts_ = (dimension+1)*(dimension+2)/2;
     };
 
-    /*!
+    *//*!
      * @brief Empty default Polynomial constructor so other classes can contain a Polynomial as private variable
-     */
+     *//*
     Polynomial();
 
     Eigen::VectorXd return_coeffs() {
@@ -75,13 +75,13 @@ public:
         return no_elemts_;
     };
 
-    /*!
+    *//*!
      * @brief Evaluates polynomial in a given input point.
      * @param evaluation point.
      * @return Polynomial value.
-     */
+     *//*
     double evaluate(Eigen::VectorXd point) {
-        /* Assume quadratic monomial basis as presented
+        *//* Assume quadratic monomial basis as presented
      * in Caio Giuliani's summary, but with a slight
      * change in ordering. Here the constant term is
      * the first one, then the linear terms, then
@@ -89,7 +89,7 @@ public:
      * the mixed terms. i.e. (1, x_1, x_2,..., 0.5*x_N,
      * 0.5*x_1^2, x_2^2,..., 0.5*x_N^2, x_1*x_2, x_1*x_3,
      * ..., x_(N-1)*x_N )
-     */
+     *//*
 
         // CHECK POLYNOMIAL AND POINT DIMENSIONS SAME
         double sum = coeffs_(0);
@@ -113,19 +113,19 @@ public:
         return sum;
     };
 
-    /*!
+    *//*!
      * @brief Evaluates gradient of model in a given input point.
      * @param gradient evaluation point.
      * @return gradient value.
-     */
+     *//*
     Eigen::VectorXd evaluateGradient(Eigen::VectorXd point) {
 
-        /* We use the taylor expansion of a function and the
+        *//* We use the taylor expansion of a function and the
          * fact that our polynomial's third (and higher) derivative
          * is zero, so the truncation error of our approximaton is
          * zero as well and thus the approximation is actually an
          * exact evaluation.
-         */
+         *//*
 
         Eigen::VectorXd grad(dimension_);
         for (int i = 0; i < dimension_; ++i) {
@@ -144,10 +144,10 @@ public:
     };
 
 
-    /*!
+    *//*!
      * @brief Adds (the coefficients of) a polynomial to *this polynomial
      * @param Polynomial
-     */
+     *//*
     void add(Polynomial poly) {
 
         if(poly.return_no_elements()!= no_elemts_){
@@ -160,15 +160,15 @@ public:
 
     };
 
-    /*!
+    *//*!
      * @brief Multiplies all coefficients of current polynomial with an input double
      * @param Double k
-     */
+     *//*
     void multiply(double k) {
         coeffs_ = k*coeffs_;
     };
 
-};
+};*/
 
 /*!
  * @brief The PolyModel class is a model for describing a
@@ -179,7 +179,7 @@ public:
  * wish. The PolyModel class can then calculate the needed
  * points in order to make the polynomial fitting unique.
  */
-class PolyModel {
+/*class PolyModel {
 
 private:
     // Member variables
@@ -194,12 +194,12 @@ private:
     Eigen::VectorXd model_coeffs_; // Private methods/sub-methods
     bool is_model_complete_; // Bool that is set true whenever a model has been build for current center point and radius
 
-   /*!
+   *//*!
     * @brief As described by A. Conn, finds a 'good point' for the
     * scaled trust region. This is a copy of C. Giuliani's Matlab code
     * @param Double k
     * @return A good point
-    */
+    *//*
     Eigen::VectorXd find_new_point(Polynomial poly) {
 
     int dimension = poly.return_dimension();
@@ -273,9 +273,9 @@ private:
     };
 
 public:
-    /*!
+    *//*!
      * @brief PolyModel constructor.
-     */
+     *//*
     PolyModel(QList<Eigen::VectorXd> points, QList<double> fvalues, double radius, int dimension) {
         points_ = points;
         fvalues_ = fvalues;
@@ -296,9 +296,9 @@ public:
         basis_ = basis;
     };
 
-    /*!
+    *//*!
      * @brief Empty default PolyModel constructor so other classes can contain a PolyModel as private variable
-     */
+     *//*
     PolyModel();
 
     QList<Eigen::VectorXd> get_points() {
@@ -333,28 +333,28 @@ public:
         return is_model_complete_;
     }
 
-    /*!
+    *//*!
      * @brief Complete set of interpolation points
      * using Algorithm 5 as described in paper
      * by C. Giuliani
-     */
+     *//*
     void complete_points(){
         // Complete set of interpolation points so
         // that the set is well-poised
 
-        /* Pivot element tolerance. Note that we can always find
+        *//* Pivot element tolerance. Note that we can always find
          * an element inside the ball of radius one in order to
          * get as close as we want to 0.25. It might however be clever
          * to lower this tolerance in order to preserve as many stored
          * function evaluations as possible.
-         */
+         *//*
         double tol_pivot = 0.24;
         Eigen::VectorXd centre_point = points_.at(0);
 
-        /* scaling points to a ball of radius 1
+        *//* scaling points to a ball of radius 1
          * and center at center_ (first point of
          * the points list)
-         */
+         *//*
 
         QList<Eigen::VectorXd> points_abs;
         for (int i = 0; i < points_.length(); ++i) {
@@ -370,21 +370,21 @@ public:
             double max_abs = 0.0;
             int max_abs_ind = -1;
             for (int j = i; j < n_points; ++j) {
-                /* If new max value, and within a distance radius_ of center point,
+                *//* If new max value, and within a distance radius_ of center point,
                  * accept this point as the currently best point.
                  * Note that we have scaled the points so we only need to
                  * check that the norm of the current points is <=1
-                 */
+                 *//*
                 if(fabs(cur_pol.evaluate(points_abs.at(j)))>max_abs && points_abs.at(i).norm()<=1){
                     max_abs = fabs(cur_pol.evaluate(points_abs.at(j)));
                     max_abs_ind = j;
                 }
             }
 
-            /* If evaluation in pivot element is greater than threshold,
+            *//* If evaluation in pivot element is greater than threshold,
              * switch elements
              * and its associated function evaluations.
-             */
+             *//*
             if(max_abs>tol_pivot) {
                 //YES sufficient pivot element aka. good point
                 points_abs.swap(i,max_abs_ind);
@@ -432,11 +432,11 @@ public:
         points_ = points_scaled;
     };
 
-    /*!
+    *//*!
      * @brief Calculate coefficients of quadratic model
      * of the trust region using a complete and
      * well poised set of points
-     */
+     *//*
     void calculate_model_coeffs() {
         if(needs_evals_){std::cout << "there are unfinished evaluations, model will be wrong" << std::endl;}
 
@@ -460,10 +460,10 @@ public:
 
     };
 
-    /*!
+    *//*!
     * @brief Returns a list of indeces of all non-evaluated cases
     * @return List of indeces of non-evaluated cases
-    */
+    *//*
     QList<int> missing_evaluations() {
         QList<int> missing;
         for(int i=0; i<points_evaluated_.length(); i++){
@@ -493,7 +493,7 @@ public:
         return 3+ 4*x(0) + 3*x(1) + x(0)*x(0) + 5*x(1)*x(1) -1*x(0)*x(1);
     };
 
-};
+};*/
 /*!
  * @brief Linspace function. Create a list containing all elements in the range from start to (but not including) end
  * with step between each element.
