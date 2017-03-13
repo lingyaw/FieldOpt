@@ -39,6 +39,8 @@ namespace {
         EXPECT_FALSE(poly_model.isModelReady());
         //poly_model.calculate_model_coeffs();
         //EXPECT_TRUE(poly_model.isModelReady());
+        //djksghjskdfhg
+        //sjfjsdfjd
     }
 
     TEST_F(TrustRegionSearchTest, OneIterationTest) {
