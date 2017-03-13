@@ -94,7 +94,7 @@ namespace TestResources {
                 {"Type", "Trustregion"},
                 {"Mode", "Minimize"},
                 {"Parameters", QJsonObject{
-                        {"MaxEvaluations", 100},
+                        {"MaxEvaluations", 500},
                         {"InitialStepLength", 1},
                         {"MinimumStepLength", 0.005}
                 }},

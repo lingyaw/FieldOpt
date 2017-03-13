@@ -145,7 +145,7 @@ void PolyModel::complete_points_abs() {
         Polynomial cur_pol = temp_basis.at(i);
         if(i==0){
             std::cout << "we don't need to find new point, basis polynomial, i = " << i << std::endl;
-           // std::cout << " This point is "<<points_abs.at(i)<<std::endl;
+            std::cout << " This point is "<<points_abs.at(i)<<std::endl;
         }
         else{
         std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
@@ -154,7 +154,7 @@ void PolyModel::complete_points_abs() {
         // Append new point and swap it to current position
         points_abs.append(find_new_point(temp_poly_here));
         //points_abs.swap(i, points_abs.length() - 1);
-       // std::cout<<"this point is "<< points_abs.at(i)<<std::endl;
+       std::cout<<"this point is "<< points_abs.at(i)<<std::endl;
 
         Polynomial temp_i = temp_basis.at(i);
         auto temp_point = points_abs.at(i);
@@ -269,11 +269,7 @@ Eigen::VectorXd PolyModel::Gradient(){
     grad=Poly.evaluateGradient(center_);
     return grad;
 }
-//Optimization::Case*  PolyModel::find_NewBaseCase(){
-//Eigen::VectorXcd NewCenterPoint=center_+optimization_step;
-   // Optimization::Case* NewBaseCase=CaseFromPoint(NewCenterPoint,cases_.at(0));
-   // return NewBaseCase;
-//}
+
 
 
 void PolyModel::addCenterPoint(Eigen::VectorXd NewCenterPoint) {

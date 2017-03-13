@@ -194,7 +194,7 @@ namespace Optimization {
                 std::cout << "All cases have been evaluated, we make optimization step now " << std::endl;
 
                 polymodel_.calculate_model_coeffs();
-                grad_norm=polymodel_.Gradient().norm();
+               // grad_norm=polymodel_.Gradient().norm();
                 Eigen::VectorXd optimizationstep;
 
                 /* optimizationstep from polymodel for minimum value.
@@ -203,14 +203,14 @@ namespace Optimization {
                 */
 
                 if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                    // optimizationstep = -polymodel_.optimizationStep_CP();
-                    optimizationstep = -polymodel_.optimizationStep_SDL();
+                    optimizationstep = -polymodel_.optimizationStep_CP();
+                   // optimizationstep = -polymodel_.optimizationStep_SDL();
 
                     std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
                               << std::endl;
                 } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                    // optimizationstep = polymodel_.optimizationStep_CP();
-                    optimizationstep = polymodel_.optimizationStep_SDL();
+                    optimizationstep = polymodel_.optimizationStep_CP();
+                   // optimizationstep = polymodel_.optimizationStep_SDL();
                     std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
                               << std::endl;
                 }
@@ -239,7 +239,10 @@ namespace Optimization {
 
                 std::cout << "The objective function value of new center point based on polymodel is "
                           << objective_value << std::endl;
-                std::cout << "|| g|| at current center point is: " << grad_norm<<std::endl;
+               // std::cout << "|| g|| at current center point is: " << grad_norm<<std::endl;
+                grad_norm=polymodel_.Gradient().norm();
+                std::cout << "|| g|| at new center point is: " << grad_norm<<std::endl;
+
                 if(grad_norm<=epsilon){
                     std::cout << "|| g|| <="<<epsilon<<". This is the final iteration " <<std::endl;
                 }

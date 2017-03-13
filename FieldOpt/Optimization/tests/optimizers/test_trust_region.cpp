@@ -196,7 +196,7 @@ using namespace Optimization::Optimizers;
 
         // Test matyas function for two variables
             TEST_F(TrustRegionSearchTest, Matyasfunction) {
-                 test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
+                 test_case_2r_->set_objective_function_value(Matyas(test_case_2r_->GetRealVarVector()));
             Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
                 Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
             int iter=0;

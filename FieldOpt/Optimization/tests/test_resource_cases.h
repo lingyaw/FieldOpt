@@ -118,8 +118,8 @@ namespace TestResources {
         };
 
         const QHash<QUuid, double> real_variables_2d_{
-                {QUuid::createUuid(), 2.0},
-                {QUuid::createUuid(), 3.0}
+                {QUuid::createUuid(), 5.5},
+                {QUuid::createUuid(), 6.5}
         };
 
     };

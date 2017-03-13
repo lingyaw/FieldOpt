@@ -47,7 +47,7 @@ namespace Optimization {
             void perturb();
 
             double grad_norm=1;
-            double epsilon=0.05;
+            double epsilon=0.01;
             bool need_optimization_step;
             Eigen::VectorXd New_CenterPoint;
             Optimization::Case* newBaseCase;
