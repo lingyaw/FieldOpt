@@ -203,14 +203,14 @@ namespace Optimization {
                 */
 
                 if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                   // optimizationstep = -polymodel_.optimizationStep_CP();
+                   //optimizationstep = -polymodel_.optimizationStep_CP();
                    optimizationstep = -polymodel_.optimizationStep_SDL();
 
                     std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
                               << std::endl;
                 } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                    // optimizationstep = polymodel_.optimizationStep_CP();
-                   optimizationstep = polymodel_.optimizationStep_SDL();
+                    //optimizationstep = polymodel_.optimizationStep_CP();
+                    optimizationstep = polymodel_.optimizationStep_SDL();
                     std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
                               << std::endl;
                 }

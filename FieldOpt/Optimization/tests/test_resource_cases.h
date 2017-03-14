@@ -27,7 +27,7 @@ namespace TestResources {
 
             test_case_2r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_2d_);
             test_case_2_4r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_4d_);
-            test_case_2_19r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_19d_);
+            test_case_2_10r_ = new Optimization::Case(QHash<QUuid, bool>(), QHash<QUuid, int>(), real_variables_10d_);
         }
 
         QList<Optimization::Case *> trivial_cases_;
@@ -68,7 +68,7 @@ namespace TestResources {
         * Four real variables.
         */
         Optimization::Case *test_case_2_4r_;
-        Optimization::Case *test_case_2_19r_;
+        Optimization::Case *test_case_2_10r_;
 
 
     private:
@@ -83,7 +83,7 @@ namespace TestResources {
                 {QUuid::createUuid(), 2},
                 {QUuid::createUuid(), 5}
         };
-        const QHash<QUuid, double> real_variables_19d_{
+        const QHash<QUuid, double> real_variables_10d_{
                 {QUuid::createUuid(), 1.0},
                 {QUuid::createUuid(), 1.0},
                 {QUuid::createUuid(), 100.0},
@@ -93,17 +93,7 @@ namespace TestResources {
                 {QUuid::createUuid(), 1712.0},
                 {QUuid::createUuid(), 12.0},
                 {QUuid::createUuid(), 2000.0},
-                {QUuid::createUuid(), 12.0},
-                {QUuid::createUuid(), 2000.0},
-                {QUuid::createUuid(), 1.0},
-                {QUuid::createUuid(), 12.0},
-                {QUuid::createUuid(), 500.0},
-                {QUuid::createUuid(), 1712.0},
-                {QUuid::createUuid(), 1712.0},
-                {QUuid::createUuid(), 2000.0},
-                {QUuid::createUuid(), 2000.0},
-                {QUuid::createUuid(), 1712.0}
-
+                {QUuid::createUuid(), 12.0}
         };
         const QHash<QUuid, double> real_variables_4d_{
                 {QUuid::createUuid(), 1.0},
@@ -118,8 +108,8 @@ namespace TestResources {
         };
 
         const QHash<QUuid, double> real_variables_2d_{
-                {QUuid::createUuid(), 6},
-                {QUuid::createUuid(), 7}
+                {QUuid::createUuid(), 14},
+                {QUuid::createUuid(), 20}
         };
 
     };
