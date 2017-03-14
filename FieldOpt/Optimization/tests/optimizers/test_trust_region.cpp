@@ -223,7 +223,7 @@ using namespace Optimization::Optimizers;
 
         // Test TestFunctionRosenbrock
         TEST_F(TrustRegionSearchTest, TestFunctionRosenbroc) {
-            test_case_2r_->set_objective_function_value(Matyas(test_case_2r_->GetRealVarVector()));
+            test_case_2r_->set_objective_function_value(Rosenbrock(test_case_2r_->GetRealVarVector()));
             Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
             Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
             int iter=0;
@@ -233,7 +233,7 @@ using namespace Optimization::Optimizers;
                 //std::cout << "Set objetive function value of case " << iter << std::endl;
                 Eigen::VectorXd point = new_case->GetRealVarVector();
                 //std::cout << "Point of this case is \n" << point << std::endl;
-                new_case->set_objective_function_value(Matyas(new_case->GetRealVarVector()));
+                new_case->set_objective_function_value(Rosenbrock(new_case->GetRealVarVector()));
                 //std::cout << "The objective function valus is\n " << new_case->objective_function_value()
                 //         << std::endl;
                 trust_region_search_->SubmitEvaluatedCase(new_case);
@@ -243,7 +243,7 @@ using namespace Optimization::Optimizers;
             Optimization::Case *tentative_best_final = trust_region_search_->GetTentativeBestCase();
             Eigen::VectorXd  point=tentative_best_final->GetRealVarVector();
             std::cout<<"Point of final tentative_best_ case is\n"<<point<<std::endl;
-            tentative_best_final->set_objective_function_value(Matyas(tentative_best_final->GetRealVarVector()));
+            tentative_best_final->set_objective_function_value(Rosenbrock(tentative_best_final->GetRealVarVector()));
             std::cout<<"Exact objetive function value of final tentative_best_ case is\n"<<tentative_best_final->objective_function_value()<<std::endl;
             EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());
 }}

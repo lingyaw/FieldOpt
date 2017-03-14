@@ -25,17 +25,23 @@ namespace Optimization {
         // case_handler_ = new CaseHandler(tentative_best_case_);
 
         Optimizer::TerminationCondition TrustRegionSearch::IsFinished()
-        {   //std::cout<<"EvauatedCases().size()"<<case_handler_->EvaluatedCases().size()<<std::endl;
-           // std::cout<<"queuedCases().size()"<<case_handler_->QueuedCases().size()<<std::endl;
-           //  std::cout<<"grad.norm"<<grad_norm<<std::endl;
+        {/*   std::cout<<"EvauatedCases().size()"<<case_handler_->EvaluatedCases().size()<<std::endl;
+            std::cout<<"queuedCases().size()"<<case_handler_->QueuedCases().size()<<std::endl;
+            std::cout<<"grad.norm"<<grad_norm<<std::endl;*/
             if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
                 return MAX_EVALS_REACHED;
             else if (radius_ < minimum_radius_)
                 return MINIMUM_STEP_LENGTH_REACHED;
-            else if (iteration_ == 0) return NOT_FINISHED;
-            else if (case_handler_->QueuedCases().size() > 0 ) return NOT_FINISHED;
-            else if (grad_norm>=epsilon) return NOT_FINISHED;
-            else return MAX_EVALS_REACHED;
+            else return NOT_FINISHED; // The value of not finished is 0, which evaluates to false.
+            /*
+            if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
+                return MAX_EVALS_REACHED;
+            else  (radius_ < minimum_radius_)
+                return MINIMUM_STEP_LENGTH_REACHED;
+            //else if (iteration_ == 0) return NOT_FINISHED;
+            //else if (case_handler_->QueuedCases().size() > 0 ) return NOT_FINISHED;
+            //else if (grad_norm>=epsilon) return NOT_FINISHED;
+           // else return MAX_EVALS_REACHED;*/
 
 
         }
@@ -239,7 +245,8 @@ namespace Optimization {
 
                 std::cout << "The objective function value of new center point based on polymodel is "
                           << objective_value << std::endl;
-               // std::cout << "|| g|| at current center point is: " << grad_norm<<std::endl;
+
+              /* // std::cout << "|| g|| at current center point is: " << grad_norm<<std::endl;
                 grad_norm=polymodel_.Gradient().norm();
                 std::cout << "|| g|| at new center point is: " << grad_norm<<std::endl;
 
@@ -249,7 +256,7 @@ namespace Optimization {
                 else
                 {
                     std::cout << "|| g|| >"<<epsilon<<". We should contiue to next iteration"<<std::endl;
-                }
+                }*/
 
             }
             
