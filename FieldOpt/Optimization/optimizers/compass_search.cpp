@@ -16,7 +16,8 @@ namespace Optimization {
         }
 
         void CompassSearch::iterate()
-        {
+        {  std::cout << "Run iterate() and create interpolation points " << std::endl;
+            std::cout << "This is iteration:\n " << iteration_ << std::endl;
             if (!is_successful_iteration() && iteration_ != 0)
                 contract();
             case_handler_->AddNewCases(generate_trial_points());

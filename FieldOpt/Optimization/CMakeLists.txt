@@ -79,7 +79,7 @@ if (BUILD_TESTING)
 	#		tests/constraints/test_constraint_handler.cpp
 	#		tests/constraints/test_reservoir_boundary.cpp
 	#		tests/objective/test_weightedsum.cpp
-	#		tests/optimizers/test_compass_search.cpp
+		#	tests/optimizers/test_compass_search.cpp
 			tests/optimizers/test_trust_region.cpp)
 	#		tests/test_resource_cases.h
 	#		tests/test_resource_optimizer.h

@@ -25,8 +25,9 @@ namespace Optimization {
         // case_handler_ = new CaseHandler(tentative_best_case_);
 
         Optimizer::TerminationCondition TrustRegionSearch::IsFinished()
-        {/*   std::cout<<"EvauatedCases().size()"<<case_handler_->EvaluatedCases().size()<<std::endl;
-            std::cout<<"queuedCases().size()"<<case_handler_->QueuedCases().size()<<std::endl;
+        {  std::cout<<"EvauatedCases().size()"<<case_handler_->EvaluatedCases().size()<<std::endl;
+
+           /* std::cout<<"queuedCases().size()"<<case_handler_->QueuedCases().size()<<std::endl;
             std::cout<<"grad.norm"<<grad_norm<<std::endl;*/
             if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
                 return MAX_EVALS_REACHED;
@@ -245,6 +246,12 @@ namespace Optimization {
 
                 std::cout << "The objective function value of new center point based on polymodel is "
                           << objective_value << std::endl;
+                double m_0= polymodel_.obejctive_function_value_model(optimizationstep-optimizationstep);
+                double m_sk=polymodel_.obejctive_function_value_model(optimizationstep);
+                std::cout << "m(0) is:\n "
+                          << m_0 << std::endl;
+                std::cout << "m(sk) is:\n "
+                          << m_sk << std::endl;
 
               /* // std::cout << "|| g|| at current center point is: " << grad_norm<<std::endl;
                 grad_norm=polymodel_.Gradient().norm();

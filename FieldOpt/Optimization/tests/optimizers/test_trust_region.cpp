@@ -245,6 +245,9 @@ using namespace Optimization::Optimizers;
             std::cout<<"Point of final tentative_best_ case is\n"<<point<<std::endl;
             tentative_best_final->set_objective_function_value(Rosenbrock(tentative_best_final->GetRealVarVector()));
             std::cout<<"Exact objetive function value of final tentative_best_ case is\n"<<tentative_best_final->objective_function_value()<<std::endl;
-            EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());
+            EXPECT_NEAR(0.0, tentative_best_final->objective_function_value(), 5);
+            EXPECT_NEAR(1.0, tentative_best_final->GetRealVarVector()[0], 2.5);
+            EXPECT_NEAR(1.0, tentative_best_final->GetRealVarVector()[1], 2.5);
+           /* EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());*/
 }}
 
