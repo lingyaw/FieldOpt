@@ -49,10 +49,10 @@ namespace Optimization {
            /* double grad_norm=1;
             double epsilon=0.01;*/
             bool need_optimization_step;
-            Eigen::VectorXd CenterPoint;
+            Eigen::VectorXd Current_CenterPoint;
             Eigen::VectorXd New_CenterPoint;
             Optimization::Case* newBaseCase;
-            Optimization::Case* BaseCase;
+            Optimization::Case* currentBaseCase;
 
 
             // Optimizer interface
@@ -69,10 +69,8 @@ namespace Optimization {
 
             QString GetStatusStringHeader() const;
             QString GetStatusString() const;
-            void UpdateModel(); //!< Creates a polynomial model, no matter what state the PolyModel is currently in
             void optimizationStep(); //!< Use current model in optimization step
-
-
+            void UpdateModel();
         private:
             void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
         protected:
