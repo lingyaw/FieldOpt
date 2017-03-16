@@ -25,13 +25,13 @@ PolyModel::PolyModel(Optimization::Case* initial_case, double radius) {
 
     needs_set_of_points_ = true;
 
-    // Check if objective value of base case has been computed
+  /*  // Check if objective value of base case has been computed
     if(initial_case->objective_function_value() == std::numeric_limits<double>::max()) {
         needs_evals_ = true;
         cases_not_eval_.append(initial_case);
     }
-    else{needs_evals_ = false;}
-
+    else{needs_evals_ = false;}*/
+    needs_evals_ = false;
     is_model_complete_ = false;
     complete_points_abs();
 
@@ -144,17 +144,17 @@ void PolyModel::complete_points_abs() {
     for (int i = 0; i < n_Polynomials; i++) {
         Polynomial cur_pol = temp_basis.at(i);
         if(i==0){
-            std::cout << "we don't need to find new point, basis polynomial, i = " << i << std::endl;
-            std::cout << " This point is "<<points_abs.at(i)<<std::endl;
+            /*std::cout << "we don't need to find new point, basis polynomial, i = " << i << std::endl;
+            std::cout << " This point is "<<points_abs.at(i)<<std::endl;*/
         }
         else{
-        std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;
+        /*std::cout << "we need to find new point, basis polynomial, i = " << i << std::endl;*/
         Polynomial temp_poly_here = temp_basis.at(i);
 
         // Append new point and swap it to current position
         points_abs.append(find_new_point(temp_poly_here));
         //points_abs.swap(i, points_abs.length() - 1);
-       std::cout<<"this point is "<< points_abs.at(i)<<std::endl;
+        /*std::cout<<"this point is "<< points_abs.at(i)<<std::endl;*/
 
         Polynomial temp_i = temp_basis.at(i);
         auto temp_point = points_abs.at(i);
@@ -185,13 +185,13 @@ void PolyModel::complete_points() {
     int n_Polynomials = basis_.length();
     //std::cout<<"n_Plynomials is "<<n_Polynomials<<std::endl;
     Eigen::VectorXd centre_point = points_.at(0);
-    std::cout<< "for i= 0" <<std::endl;
-    std::cout<< "This interpolation point is:\n  " <<points_.at(0)<<std::endl;
+    /*std::cout<< "for i= 0" <<std::endl;
+    std::cout<< "This interpolation point is:\n  " <<points_.at(0)<<std::endl;*/
     // Scale points back
     for (int i = 1; i < n_Polynomials; ++i) {
         points_.append(centre_point + radius_*points_abs.at(i));
-        std::cout<< "for i= " <<i<<std::endl;
-        std::cout<< "This interpolation point is:\n " <<points_.at(points_.size()-1)<<std::endl;
+      /*  std::cout<< "for i= " <<i<<std::endl;
+        std::cout<< "This interpolation point is:\n " <<points_.at(points_.size()-1)<<std::endl;*/
 
         //creat case from new interpolation point
 
@@ -199,7 +199,7 @@ void PolyModel::complete_points() {
         //std::cout<< "  for i=  " << i << " point of cases_.at(i) is "<< cases_.at(i)->GetRealVarVector()<<std::endl;
 
         // Append case to list of unevaluated cases
-        cases_not_eval_.append(cases_.at(i));
+         cases_not_eval_.append(cases_.at(i));
         //std::cout<< " send point to cases_not_eval "<< cases_not_eval_.at(cases_not_eval_.size()-1)->GetRealVarVector()<<std::endl;
 
         //Eigen::VectorXd point=cases_not_eval_.at(end)->GetRealVarVector();
@@ -242,7 +242,7 @@ Eigen::VectorXd PolyModel::optimizationStep_CP() {
     grad=Poly.evaluateGradient(center_);
     //Find Hessian matrix first
     Poly.Hessian();
-    std::cout<<"Find Cauchy point:"<<std::endl;
+    //std::cout<<"Find Cauchy point:"<<std::endl;
     optimization_step_CP= Poly.Cauchy_Point(center_,radius_,grad); // Optimizationstep at subregion boundary based on G
     //std::cout << " OptimizationStep(Gradient Descent) is" <<optimization_step_CP <<std::endl;
     return optimization_step_CP;
@@ -272,17 +272,18 @@ Eigen::VectorXd PolyModel::Gradient(){
 
 
 
-void PolyModel::addCenterPoint(Eigen::VectorXd NewCenterPoint) {
-    Optimization::Case *newBaseCase=CaseFromPoint(NewCenterPoint,cases_.at(0));//get new BaseCase from NewCenterPoint
+void PolyModel::addCenterPoint( Optimization::Case* BaseCase) {
+   // Optimization::Case *newBaseCase=CaseFromPoint(NewCenterPoint,cases_.at(0));//get new BaseCase from NewCenterPoint
     //clear points_ and cases_
     cases_ = QList<Optimization::Case*>();
     points_= QList<Eigen::VectorXd> ();
 
     // add newBaseCase to cases_and cases_not_eval
-    cases_.append(newBaseCase);
-    cases_not_eval_.append(newBaseCase);
-    points_.append(NewCenterPoint);
+    cases_.append(BaseCase);
+    //cases_not_eval_.append(newBaseCase);
+    points_.append(BaseCase->GetRealVarVector());
     center_ = points_.at(0);
+    std::cout << "The new center point is " <<center_<<std::endl;
 
     is_model_complete_ = false;
     needs_set_of_points_ = true;
