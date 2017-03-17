@@ -146,7 +146,7 @@ public:
     void set_model_complete(){
         is_model_complete_ = true;
     }
-    void addCenterPoint(Eigen::VectorXd newCenterPoint);
+    void addBaseCase( Optimization::Case* BaseCase);
 
 
     Eigen::VectorXd optimizationStep_CP();
