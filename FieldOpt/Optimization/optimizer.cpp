@@ -1,4 +1,5 @@
 #include "optimizer.h"
+#include <iostream>
 
 namespace Optimization {
 

@@ -81,9 +81,6 @@ namespace {
             minimizer->SubmitEvaluatedCase(next_case);
         }
         auto best_case = minimizer->GetTentativeBestCase();
-
-        std::cout << "best case from compass search is  " << best_case->GetRealVarVector()<<std::endl;
-        std::cout << "objective function value from best case is   " << best_case->objective_function_value()<<std::endl;
         // The Rosenbrock function is hard. We don't expect Compass search to find the optimum exactly.
         EXPECT_NEAR(0.0, best_case->objective_function_value(), 5);
         EXPECT_NEAR(1.0, best_case->GetRealVarVector()[0], 2.5);

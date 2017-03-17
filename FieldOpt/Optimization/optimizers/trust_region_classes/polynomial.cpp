@@ -69,11 +69,11 @@ Eigen::VectorXd Polynomial::evaluateGradient(Eigen::VectorXd point) {
 
 
 Eigen::MatrixXd  Polynomial::Hessian(){
-    std::cout<<"Find Hessian Matrix"<<std::endl;
-    /* Hessian matrix is a square matrix of second-order
-     * partial derivative of a scalar-valued function.
-     * for quadratic poly model, Hessian matrix only depend on cofficients
- */
+    /* std::cout<<"Find Hessian Matrix"<<std::endl;
+     *  Hessian matrix is a square matrix of second-order
+      * partial derivative of a scalar-valued function.
+      * for quadratic poly model, Hessian matrix only depend on cofficients
+  */
     Eigen::MatrixXd B=Eigen::MatrixXd::Zero(dimension_,dimension_);
 
     for(int i=0; i<dimension_; ++i){
@@ -90,7 +90,7 @@ Eigen::MatrixXd  Polynomial::Hessian(){
 
         }
         }
-    std::cout<< "Hessian matrix:\n"<< B <<std::endl;
+    //std::cout<< "Hessian matrix:\n"<< B <<std::endl;
     Hessian_Matrix=B;
 
  return Hessian_Matrix;

@@ -14,7 +14,7 @@ namespace Optimization {
 
         void TrustRegionSearch::scaleRadius(double k)
         {
-            std::cout << "Radius before scaling is  " << radius_ << std::endl;
+           // std::cout << "Radius before scaling is  " << radius_ << std::endl;
             std::cout << " Factor k is  " << k<< std::endl;
             radius_ = k*radius_;
             polymodel_.setRadius(radius_);
@@ -25,7 +25,8 @@ namespace Optimization {
         // case_handler_ = new CaseHandler(tentative_best_case_);
 
         Optimizer::TerminationCondition TrustRegionSearch::IsFinished()
-        {
+        {  std::cout << "EvaluatedCases().size is\n  " <<case_handler_->EvaluatedCases().size()<<std::endl;
+         /*   std::cout << "Radius is\n" <<radius_<<std::endl;*/
             if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
                 return MAX_EVALS_REACHED;
             else if (radius_ < minimum_radius_)
@@ -86,21 +87,70 @@ namespace Optimization {
         }
 
         void TrustRegionSearch::UpdateModel() {
-            if (!need_optimization_step&&case_handler_->QueuedCases().size()==0)
+            if (!need_optimization_step)
             {
-                std::cout <<"Optimization step is finished, now we need to check the model accuracy. " << std::endl;
+                if(case_handler_->QueuedCases().size()==0)
+                {
+                    std::cout <<"The new Base case has been evaluated after optimization step, we need to check the model accuracy" << std::endl;
+                    double f_xk=currentBaseCase->objective_function_value();
+                    double f_xk1=newBaseCase->objective_function_value();
+                    double m_xk=polymodel_.obejctive_function_value_model(Current_CenterPoint);
+                    double m_xk1=polymodel_.obejctive_function_value_model(New_CenterPoint);
+                    double ared=f_xk-f_xk1;
+                    double pred=m_xk-m_xk1;
+                    double rho=ared/pred;
+                    std::cout << "The objective function value of current base case from model is\n " <<m_xk << std::endl;
+                    std::cout << "The objective function value of current new base case from model is\n " <<m_xk1<< std::endl;
+                    std::cout <<"Actual objective function value of the current Base Case is \n" <<f_xk<<std::endl;
+                    std::cout <<"Actual objective function value of the new Base Case is \n" <<f_xk1<<std::endl;
+                    std::cout <<"Actual reduction is  " << ared<<std::endl;
+                    std::cout <<"Model reduction is " << pred<<std::endl;
+                    Optimization::Case *BaseCase;
+                    Eigen::VectorXd  CenterPoint;
 
+                   /*     std::cout <<"f(xk) is " <<f_xk<<std::endl;
+                   std::cout <<"f(xk+1) is " <<f_xk1<<std::endl;
+                   std::cout <<"m(xk) is " <<m_xk<<std::endl;
+                   std::cout <<"m(xk1) is " <<m_xk1<<std::endl;
+
+                   */
+                    if(rho>=0.75)
+                    {    std::cout <<"ratio is " << rho<<", ratio >= 0.75"<<std::endl;
+                         std::cout <<"Very successful iteration and candidate solution is accepted, radius should be increased for next iteration " <<std::endl;
+                        scaleRadius(2);
+                         BaseCase=newBaseCase;
+                         CenterPoint=New_CenterPoint;
+                    }
+                    else if(rho>=0.25)
+                    {   std::cout <<"ratio is " << rho<<", 0.25<=ratio<=0.75"<<std::endl;
+                        std::cout <<"Successful iteration and candidate solution is accpeted,keep same radius for next iteration " << std::endl;
+                        BaseCase=newBaseCase;
+                        CenterPoint=New_CenterPoint;
+                    }
+
+                    else
+                    {    std::cout <<"ratio is " << rho<<", ratio<=0.25"<<std::endl;
+                        std::cout <<"unsuccessful iteration and candidate solution is not accpeted, radius should be reduced for next iteration " << std::endl;
+                        scaleRadius(0.5);
+                        BaseCase=currentBaseCase;
+                        CenterPoint=Current_CenterPoint;
+
+                    }
+
+
+                    polymodel_.addBaseCase(BaseCase); //needs_set of points=true, is model_complete=false;
+                    tentative_best_case_ =BaseCase;
+                    std::cout <<"CenterPoint for next itertion is \n" << CenterPoint<<std::endl;
+
+                }
+                else
+                {
+                    std::cout <<" Optimization step is finished, the new base case needs to be evaluated first." << std::endl;
+                }
 
             }
-            else
-            {
-
-                std::cout << " Find optimization step first. " << std::endl;
-
-            }
-
-
         }
+
         void TrustRegionSearch::optimizationStep() //
         {
             if (case_handler_->QueuedCases().size()==0&&need_optimization_step) {
@@ -110,42 +160,26 @@ namespace Optimization {
                 Eigen::VectorXd optimizationstep;
 
                 if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                    //optimizationstep = -polymodel_.optimizationStep_CP();
-                    optimizationstep = -polymodel_.optimizationStep_SDL();
+                    optimizationstep = -polymodel_.optimizationStep_CP();
+                    //optimizationstep = -polymodel_.optimizationStep_SDL();
 
                     std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
                               << std::endl;
                 } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                    //optimizationstep = polymodel_.optimizationStep_CP();
-                    optimizationstep = polymodel_.optimizationStep_SDL();
+                    optimizationstep = polymodel_.optimizationStep_CP();
+                    //optimizationstep = polymodel_.optimizationStep_SDL();
                     std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
                               << std::endl;
                 }
-                // Find point of newCenterPoint which is the best point in current subregion
-                // newCenterpoint=current centerpoint+optimization step
                 std::cout << "The current Center Point is \n" << polymodel_.get_centerpoint() << std::endl;
-                std::cout << "The objective function value of current center is\n " << polymodel_.obejctive_function_value_model(polymodel_.get_centerpoint()) << std::endl;
                  currentBaseCase=tentative_best_case_;
                  Current_CenterPoint=polymodel_.get_centerpoint();
                 New_CenterPoint = optimizationstep + polymodel_.get_centerpoint();
                 std::cout << "The New Center Point after optimization step is\n" << New_CenterPoint << std::endl;
-
                 // Use the best case in current subregion as a new Base Case for next iteration. Creat this Case from its Point
                 // tentative_best_case=base_case (center point)
                 newBaseCase = polymodel_.CaseFromPoint(New_CenterPoint, tentative_best_case_);
-
-
-                polymodel_.addCenterPoint(New_CenterPoint); //needs_set of points=true, is model_complete=false;
-                //scaleRadius(0.5);
-                //handleEvaluatedCase(newBaseCase);
-                tentative_best_case_ = newBaseCase;
-                //std::cout << "points of tentative_best_case is   " << tentative_best_case_->GetRealVarVector() << std::endl;
-
-                //calulate the objective function value of new center point (based on polymodel)
-                objective_value = polymodel_.obejctive_function_value_model(tentative_best_case_->GetRealVarVector());
-
-                std::cout << "The objective function value of new center point based on polymodel is "
-                          << objective_value << std::endl;
+                case_handler_->AddNewCase(newBaseCase);
 
                 need_optimization_step=false;
 

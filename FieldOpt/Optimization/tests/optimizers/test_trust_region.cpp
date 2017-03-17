@@ -22,7 +22,7 @@ using namespace Optimization::Optimizers;
         Optimization::Case *base_;
         //Optimization::Optimizer *trust_region_search_;
     };
-
+/*
     TEST_F(TrustRegionSearchTest, Constructor) {
             test_case_2r_->set_objective_function_value(1000);
             Optimization::Optimizer *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_,
@@ -148,7 +148,6 @@ using namespace Optimization::Optimizers;
 
         // test sphere
 
-
     TEST_F(TrustRegionSearchTest, Spherefunction) {
              // 2 real variables
            // test_case_2r_->set_objective_function_value(Sphere(test_case_2r_->GetRealVarVector()));
@@ -219,12 +218,22 @@ using namespace Optimization::Optimizers;
                 tentative_best_final->set_objective_function_value(Matyas(tentative_best_final->GetRealVarVector()));
                 std::cout<<"Exact objetive function value of final tentative_best_ case is\n"<<tentative_best_final->objective_function_value()<<std::endl;
                 EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());
-            }
+            }*/
 
         // Test TestFunctionRosenbrock
-        TEST_F(TrustRegionSearchTest, TestFunctionRosenbroc) {
+        TEST_F(TrustRegionSearchTest, TestFunctionRosenbrock) {
+      /*      test_case_2_3r_->set_objective_function_value(Rosenbrock(test_case_2_3r_->GetRealVarVector()));
+            Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_3r_, varcont_prod_bhp_, grid_5spot_);
+        test_case_2_4r_->set_objective_function_value(Rosenbrock(test_case_2_4r_->GetRealVarVector()));
+        Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_4r_, varcont_prod_bhp_, grid_5spot_);
+        test_case_2_5r_->set_objective_function_value(Rosenbrock(test_case_2_5r_->GetRealVarVector()));
+        Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_5r_, varcont_prod_bhp_, grid_5spot_);
+        test_case_2_10r_->set_objective_function_value(Rosenbrock(test_case_2_10r_->GetRealVarVector()));
+        Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2_10r_, varcont_prod_bhp_, grid_5spot_);*/
+
             test_case_2r_->set_objective_function_value(Rosenbrock(test_case_2r_->GetRealVarVector()));
             Optimization::Optimizers::TrustRegionSearch *trust_region_search_= new TrustRegionSearch(settings_trust_region_search_min_unconstr_, test_case_2r_, varcont_prod_bhp_, grid_5spot_);
+
             Optimization::Case *tentative_best_0 = trust_region_search_->GetTentativeBestCase();
             int iter=0;
             while (!trust_region_search_->IsFinished()) {
@@ -248,6 +257,7 @@ using namespace Optimization::Optimizers;
             EXPECT_NEAR(0.0, tentative_best_final->objective_function_value(), 5);
             EXPECT_NEAR(1.0, tentative_best_final->GetRealVarVector()[0], 2.5);
             EXPECT_NEAR(1.0, tentative_best_final->GetRealVarVector()[1], 2.5);
-           /* EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());*/
-}}
+            EXPECT_TRUE(tentative_best_final->objective_function_value() <= tentative_best_0->objective_function_value());
+        }
+    }
 
