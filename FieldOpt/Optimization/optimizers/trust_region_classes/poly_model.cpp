@@ -272,7 +272,7 @@ Eigen::VectorXd PolyModel::Gradient(){
 
 
 
-void PolyModel::addCenterPoint( Optimization::Case* BaseCase) {
+void PolyModel::addBaseCase( Optimization::Case* BaseCase) {
    // Optimization::Case *newBaseCase=CaseFromPoint(NewCenterPoint,cases_.at(0));//get new BaseCase from NewCenterPoint
     //clear points_ and cases_
     cases_ = QList<Optimization::Case*>();
