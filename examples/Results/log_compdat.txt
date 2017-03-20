@@ -1,0 +1,338 @@
+{43d4df88-f380-416a-a224-b98470be3b9a}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{4bf7cf85-97da-4c2f-91da-1a172b7a1c2a}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{3c7b4524-aaed-4cec-9315-aaec9764f289}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{cf3887af-caf0-4742-bd6b-260112893d93}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{ff67f5c1-22b5-4d1d-b76f-379dddbcf4ad}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{402d6e46-27fe-4075-bef3-020a77445e8f}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{2439f9a1-6cc2-4138-9b5d-35c6b2d23b16}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{0cc08e4f-74ca-4f89-9ffb-f42ebe6cfc4f}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{e0e887bf-cc0c-4482-889b-6270d393af2d}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{ac0358bc-9528-4da9-92f5-c69104372b8b}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{8c7e030e-98ca-46dc-81d3-6a717bd2b3da}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{e0361d07-1c30-4685-9060-6dba45c63d4b}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{183c40a0-23a0-46b4-a98c-ab39625b229a}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{571688fd-b9f4-42f7-ae5a-227aaad06ace}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{37dde737-58c0-4ae7-858c-237ef2806d66}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{dd0956d8-6cf5-4002-934b-72edf19175cc}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{392ed1fb-1280-4c01-b802-fe03a7fc816c}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{f8555b4f-4da2-42fe-9522-49b3a6317518}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{5126afdb-42bc-4cdb-9109-2a28e0812343}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{b47bfbf2-4c41-491c-8366-2fba7328625e}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{7793e562-4a1b-4597-b4b1-0559dc8e7205}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{dfdf855c-025d-42ee-8c33-1593e61b41a3}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{e610d172-6973-4394-a982-466ab2aec1b6}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{ded0cdf9-e970-4f57-8f1e-6d3a60eb2078}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{33925bcc-0721-4550-95c4-79dec4844994}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
+{6647cd50-4a5d-4123-bdde-16feeab66c9c}
+COMPDAT
+    PROD 1 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 2 4 1 1 SHUT 1* 1* 0.75 1* 1* 1* X /
+    PROD 3 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    PROD 4 4 1 1 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 1 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 2 4 5 5 SHUT 1* 1* 0.75 1* 1* 1* X /
+    INJ 3 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+    INJ 4 4 5 5 OPEN 1* 1* 0.75 1* 1* 1* X /
+
+/
+
