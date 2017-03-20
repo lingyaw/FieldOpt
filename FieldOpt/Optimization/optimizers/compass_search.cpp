@@ -52,6 +52,7 @@ namespace Optimization {
         void CompassSearch::handleEvaluatedCase(Case *c) {
             if (isImprovement(c))
                 tentative_best_case_ = c;
+            std::cout << "objective function value of tentative best case is " <<tentative_best_case_->objective_function_value()<< std::endl;
         }
 
         bool CompassSearch::is_successful_iteration() {

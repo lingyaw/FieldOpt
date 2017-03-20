@@ -74,7 +74,7 @@ namespace Optimization {
         private:
             void iterate(); //!< Step or contract, perturb, and clear list of recently evaluated cases.
         protected:
-            void handleEvaluatedCase(Case *c) override {};
+            void handleEvaluatedCase(Case *c) override ;
 
         };
     }}

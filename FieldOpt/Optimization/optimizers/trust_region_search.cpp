@@ -25,7 +25,7 @@ namespace Optimization {
         // case_handler_ = new CaseHandler(tentative_best_case_);
 
         Optimizer::TerminationCondition TrustRegionSearch::IsFinished()
-        {  std::cout << "EvaluatedCases().size is\n  " <<case_handler_->EvaluatedCases().size()<<std::endl;
+        { /* std::cout << "EvaluatedCases().size is\n  " <<case_handler_->EvaluatedCases().size()<<std::endl;*/
          /*   std::cout << "Radius is\n" <<radius_<<std::endl;*/
             if (case_handler_->EvaluatedCases().size() >= max_evaluations_)
                 return MAX_EVALS_REACHED;
@@ -38,7 +38,7 @@ namespace Optimization {
 
 
         void TrustRegionSearch::iterate() {
-            std::cout << "Run iterate() and create interpolation points " << std::endl;
+            std::cout << "Run iterate() in Trust region and create interpolation points " << std::endl;
             std::cout << "This is iteration:\n " << iteration_ << std::endl;
             /* Everytime we update model we must first have a PolyModel object,
              * then we must complete the set of points in the model, then the
@@ -152,7 +152,7 @@ namespace Optimization {
         }
 
         void TrustRegionSearch::optimizationStep() //
-        {
+        {     std::cout << "EvaluatedCases().size is "<<case_handler_->EvaluatedCases().size() << std::endl;
             if (case_handler_->QueuedCases().size()==0&&need_optimization_step) {
                 std::cout << "All cases have been evaluated, we make optimization step now " << std::endl;
 
@@ -160,14 +160,14 @@ namespace Optimization {
                 Eigen::VectorXd optimizationstep;
 
                 if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                    optimizationstep = -polymodel_.optimizationStep_CP();
-                   // optimizationstep = -polymodel_.optimizationStep_SDL();
+                    //optimizationstep = -polymodel_.optimizationStep_CP();
+                   optimizationstep = -polymodel_.optimizationStep_SDL();
 
                     std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
                               << std::endl;
                 } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                    optimizationstep = polymodel_.optimizationStep_CP();
-                    //optimizationstep = polymodel_.optimizationStep_SDL();
+                    //optimizationstep = polymodel_.optimizationStep_CP();
+                    optimizationstep = polymodel_.optimizationStep_SDL();
                     std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
                               << std::endl;
                 }
@@ -217,10 +217,16 @@ namespace Optimization {
             case_handler_->UpdateCaseObjectiveFunctionValue(c->id(), c->objective_function_value());
             case_handler_->SetCaseEvaluated(c->id());
             handleEvaluatedCase(case_handler_->GetCase(c->id()));
-            optimizationStep();
-            UpdateModel();
+           /* optimizationStep();
+            UpdateModel();*/
             
         }
+
+        void TrustRegionSearch::handleEvaluatedCase(Case *c) {
+            optimizationStep();
+            UpdateModel();
+        }
+
 
     }}
 
