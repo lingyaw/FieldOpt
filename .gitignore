@@ -46,6 +46,7 @@ build/*
 
 # Test folders
 test-*
+examples/*Results*/*
 
 # Ignore ADGPRS output files
 *.SIM.H5
