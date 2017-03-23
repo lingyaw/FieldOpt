@@ -96,7 +96,9 @@ namespace TestResources {
                 {"Parameters", QJsonObject{
                         {"MaxEvaluations", 100},
                         {"InitialStepLength", 1},
-                        {"MinimumStepLength", 0.005}
+                        {"MinimumStepLength", 0.005},
+                        {"ContractionFactor", 0.5},
+                        {"ExpansionFactor", 1.5}
                 }},
                 {"Objective", obj_fun_}
         };
@@ -106,7 +108,9 @@ namespace TestResources {
                 {"Parameters", QJsonObject{
                         {"MaxEvaluations", 100},
                         {"InitialStepLength", 1},
-                        {"MinimumStepLength", 0.005}
+                        {"MinimumStepLength", 0.005},
+                        {"ContractionFactor", 0.5},
+                        {"ExpansionFactor", 1.5}
                 }},
                 {"Objective", obj_fun_}
         };

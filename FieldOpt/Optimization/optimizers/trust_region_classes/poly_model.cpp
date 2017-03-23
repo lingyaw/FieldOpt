@@ -235,7 +235,7 @@ void PolyModel::calculate_model_coeffs() {
 }
 
 // Find optimization step along Gradient
-Eigen::VectorXd PolyModel::optimizationStep_CP() {
+Eigen::VectorXd PolyModel::optimizationStep_CP(int factor) {
     std::cout << "Calculate OptimizationStep" <<std::endl;
    Eigen::VectorXd coeffs= get_model_coeffs();
     Polynomial Poly = Polynomial(dimension_, coeffs);
@@ -250,11 +250,13 @@ Eigen::VectorXd PolyModel::optimizationStep_CP() {
 // Return the intersection of the segment
 // connecting the Cauchy point to the Newton point with the
 // trust region boundary
-Eigen::VectorXd PolyModel::optimizationStep_SDL() {
+Eigen::VectorXd PolyModel::optimizationStep_SDL(int factor) {
     std::cout << "Calculate OptimizationStep" <<std::endl;
-    Eigen::VectorXd coeffs= get_model_coeffs();
+    Eigen::VectorXd coeffs=factor*get_model_coeffs();
     Polynomial Poly = Polynomial(dimension_, coeffs);
     grad=Poly.evaluateGradient(center_);
+    std::cout << "coeffs in polynomial \n" <<coeffs<<std::endl;
+    std::cout << "grad is\n " <<grad<<std::endl;
     //Find Hessian matrix first
     Poly.Hessian();
    optimization_step_SDL= Poly.Dogleg_step(center_,radius_,grad); // Optimizationstep at subregion boundary based on G
