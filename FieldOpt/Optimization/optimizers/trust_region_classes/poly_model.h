@@ -149,7 +149,7 @@ public:
     void addBaseCase( Optimization::Case* BaseCase);
 
 
-    Eigen::VectorXd optimizationStep_CP();
+    Eigen::VectorXd optimizationStep_CP(int factor);
 
     /*!
     * @brief find Opt step based on dog-leg method
@@ -158,7 +158,7 @@ public:
     * trust region boundary
     */
 
-    Eigen::VectorXd optimizationStep_SDL();
+    Eigen::VectorXd optimizationStep_SDL(int factor);
     Eigen::VectorXd Gradient();
 
     Eigen::VectorXd get_centerpoint(){

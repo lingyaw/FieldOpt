@@ -7,7 +7,7 @@
         "Type": "Compass",
         "Mode": "Maximize",
         "Parameters": {
-            "MaxEvaluations": 50,
+            "MaxEvaluations": 31,
             "InitialStepLength": 100.0,
             "MinimumStepLength": 10.0
         },
