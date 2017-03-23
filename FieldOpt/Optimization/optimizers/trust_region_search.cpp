@@ -10,6 +10,8 @@ namespace Optimization {
         {
             radius_ = settings->parameters().initial_step_length;
             minimum_radius_ = settings->parameters().minimum_step_length;
+            contr_fac_ = settings->parameters().contraction_factor;
+            expan_fac_ = settings->parameters().expansion_factor;
         }
 
         void TrustRegionSearch::scaleRadius(double k)
@@ -103,8 +105,8 @@ namespace Optimization {
                     std::cout << "The objective function value of current new base case from model is\n " <<m_xk1<< std::endl;
                     std::cout <<"Actual objective function value of the current Base Case is \n" <<f_xk<<std::endl;
                     std::cout <<"Actual objective function value of the new Base Case is \n" <<f_xk1<<std::endl;
-                    std::cout <<"Actual reduction is  " << ared<<std::endl;
-                    std::cout <<"Model reduction is " << pred<<std::endl;
+                    std::cout <<"Actual changing is  " << ared<<std::endl;
+                    std::cout <<"Model changing is " << pred<<std::endl;
                     Optimization::Case *BaseCase;
                     Eigen::VectorXd  CenterPoint;
 
@@ -117,7 +119,7 @@ namespace Optimization {
                     if(rho>=0.75)
                     {    std::cout <<"ratio is " << rho<<", ratio >= 0.75"<<std::endl;
                          std::cout <<"Very successful iteration and candidate solution is accepted, radius should be increased for next iteration " <<std::endl;
-                        scaleRadius(2);
+                        scaleRadius(expan_fac_);
                          BaseCase=newBaseCase;
                          CenterPoint=New_CenterPoint;
                     }
@@ -131,7 +133,7 @@ namespace Optimization {
                     else
                     {    std::cout <<"ratio is " << rho<<", ratio<=0.25"<<std::endl;
                         std::cout <<"unsuccessful iteration and candidate solution is not accpeted, radius should be reduced for next iteration " << std::endl;
-                        scaleRadius(0.5);
+                        scaleRadius(contr_fac_);
                         BaseCase=currentBaseCase;
                         CenterPoint=Current_CenterPoint;
 
@@ -160,14 +162,16 @@ namespace Optimization {
                 Eigen::VectorXd optimizationstep;
 
                 if (mode_ == Settings::Optimizer::OptimizerMode::Maximize) {
-                    //optimizationstep = -polymodel_.optimizationStep_CP();
-                   optimizationstep = -polymodel_.optimizationStep_SDL();
+                    int factor=-1;
+                   // optimizationstep = polymodel_.optimizationStep_CP(factor);
+                   optimizationstep = polymodel_.optimizationStep_SDL(factor);
 
                     std::cout << "Optimizer Mode is Maximize, the optimization step should be   " << optimizationstep
                               << std::endl;
                 } else if (mode_ == Settings::Optimizer::OptimizerMode::Minimize) {
-                    //optimizationstep = polymodel_.optimizationStep_CP();
-                    optimizationstep = polymodel_.optimizationStep_SDL();
+                    int factor=1;
+                    // optimizationstep = polymodel_.optimizationStep_CP(factor);
+                   optimizationstep = polymodel_.optimizationStep_SDL(factor);
                     std::cout << "Optimizer Mode is minimize, The optimization step shoule be  " << optimizationstep
                               << std::endl;
                 }
