@@ -36,6 +36,8 @@ namespace Optimization {
         private:
             double radius_; //!< The size of the perturbation for each variable.
             double minimum_radius_; //!< Smallest allowed step length for the optimizer. _This is a termination condition_.
+            double contr_fac_; //!< Step length contraction factor.
+            double expan_fac_; //!< Step length expansion factor.
             PolyModel polymodel_;
             double objective_value;
 
